@@ -4,7 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_attendee/admin_console/admin_console.dart.dart';
 import 'package:smart_attendee/admin_console/providers/add_employee_provider.dart';
+import 'package:smart_attendee/admin_console/providers/get_all_employees.dart';
 import 'package:smart_attendee/admin_console/widgets/submit_button.dart';
 
 class AddEmployee extends StatefulWidget {
@@ -125,7 +127,16 @@ class _AddEmployeeState extends State<AddEmployee> {
                                   empShift: dropdownValue)
                               .then((value) {
                             if (value == "true") {
-                              Navigator.pop(context);
+                              // Navigator.pop(context);
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => ChangeNotifierProvider(
+                                            create: (context) =>
+                                                GetAllEmployeeProvider(),
+                                            child: AdminConsole(),
+                                          )),
+                                  (route) => false);
                             }
                           });
                         }

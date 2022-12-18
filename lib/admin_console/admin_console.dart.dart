@@ -34,7 +34,7 @@ class _AdminConsoleState extends State<AdminConsole> {
                     padding: const EdgeInsets.all(8.0),
                     child: ListTile(
                       trailing: SubmitButton(
-                        isEditbutton: false,
+                        isEditbutton: true,
                         title: "Edit",
                       ),
                       leading: CircleAvatar(
