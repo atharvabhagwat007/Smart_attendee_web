@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,7 +20,11 @@ class _AddEmployeeState extends State<AddEmployee> {
   File _file = File("zz");
   Uint8List webImage = Uint8List(10);
   final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _empEmailController = TextEditingController();
+  final TextEditingController _empPasswordController = TextEditingController();
+  final TextEditingController _empIdController = TextEditingController();
   String dropdownValue = "Morning";
+  String photoUploadUrl = "";
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -34,86 +39,103 @@ class _AddEmployeeState extends State<AddEmployee> {
                 borderRadius: BorderRadius.circular(10), color: Colors.white),
             child: Padding(
               padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _getTitle(context),
-                  const Divider(
-                    thickness: 1,
-                  ),
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: InkWell(
-                        onTap: () async {
-                          _pickImage();
-                        },
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundImage: _file.path == "zz"
-                              ? Image.asset(
-                                  "assets/images/profile_image.png",
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      const Icon(Icons.error),
-                                ).image
-                              : Image.memory(webImage).image,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _getTitle(context),
+                    const Divider(
+                      thickness: 1,
+                    ),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: InkWell(
+                          onTap: () async {
+                            _pickImage();
+                          },
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundImage: _file.path == "zz"
+                                ? Image.asset(
+                                    "assets/images/profile_image.png",
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            const Icon(Icons.error),
+                                  ).image
+                                : Image.memory(webImage).image,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const Center(
-                    child: Text(
-                      "Please upload employee image",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    const Center(
+                      child: Text(
+                        "Please upload employee image",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  _getNameForms(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  _getShiftDropDown(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      if (_firstNameController.text.isEmpty ||
-                          _lastNameController.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: SizedBox(
-                              height: 20,
-                              child: Center(
-                                  child: Text("Please enter all fields")),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    _getNameForms(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    _customTextField(
+                        "Enter employee Id*", "Employee Id", _empIdController,
+                        width: 300),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    _getEmailPassForms(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    _getShiftDropDown(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        if (_firstNameController.text.isEmpty ||
+                            _lastNameController.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: SizedBox(
+                                height: 20,
+                                child: Center(
+                                    child: Text("Please enter all fields")),
+                              ),
                             ),
-                          ),
-                        );
-                      } else {
-                        context
-                            .read<AddEmployeeProvider>()
-                            .addEmoplyee(
-                                context: context,
-                                empPhotoUrl:
-                                    "https://firebasestorage.googleapis.com/v0/b/tusharproject-740b6.appspot.com/o/gfg.jpg?alt=media&token=cb42a4a6-a167-41c9-a716-11d020ffed12",
-                                empName:
-                                    "${_firstNameController.text} ${_lastNameController.text}",
-                                empShift: dropdownValue)
-                            .then((value) {
-                          if (value == "true") {
-                            Navigator.pop(context);
-                          }
-                        });
-                      }
-                    },
-                    child: SubmitButton(
-                      title: "Submit",
-                    ),
-                  )
-                ],
+                          );
+                        } else {
+                          context
+                              .read<AddEmployeeProvider>()
+                              .addEmoplyee(
+                                  empId: _empIdController.text,
+                                  empMail: _empEmailController.text,
+                                  empPassword: _empPasswordController.text,
+                                  webImage: webImage,
+                                  context: context,
+                                  empPhotoUrl:
+                                      "https://firebasestorage.googleapis.com/v0/b/tusharproject-740b6.appspot.com/o/gfg.jpg?alt=media&token=cb42a4a6-a167-41c9-a716-11d020ffed12",
+                                  empName:
+                                      "${_firstNameController.text} ${_lastNameController.text}",
+                                  empShift: dropdownValue)
+                              .then((value) {
+                            if (value == "true") {
+                              Navigator.pop(context);
+                            }
+                          });
+                        }
+                      },
+                      child: SubmitButton(
+                        title: "Submit",
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -121,23 +143,6 @@ class _AddEmployeeState extends State<AddEmployee> {
       ),
     );
   }
-  //   void uploadPhoto() async {
-  //   var firebaseStorage = FirebaseStorage.instance;
-  //   // ignore: omit_local_variable_types
-  //   Reference reference =
-  //       firebaseStorage.ref().child(_firebaseAuth.currentUser?.uid ?? 'images');
-
-  //   await reference
-  //       .putData(
-  //     webImage,
-  //     SettableMetadata(contentType: 'image/jpeg'),
-  //   )
-  //       .whenComplete(() async {
-  //     await reference.getDownloadURL().then((value) {
-  //       photoUploadUrl = value;
-  //     });
-  //   });
-  // }
 
   _getShiftDropDown() {
     return Row(
@@ -193,6 +198,24 @@ class _AddEmployeeState extends State<AddEmployee> {
     );
   }
 
+  _getEmailPassForms() {
+    return Row(
+      children: [
+        Expanded(
+          child: _customTextField(
+              "Employee Email*", "Emp email", _empEmailController),
+        ),
+        const SizedBox(
+          width: 30,
+        ),
+        Expanded(
+          child: _customTextField("Enter a password for employee*", "Password",
+              _empPasswordController),
+        ),
+      ],
+    );
+  }
+
   _getTitle(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,7 +251,8 @@ class _AddEmployeeState extends State<AddEmployee> {
   }
 
   _customTextField(String title, String labelText,
-      TextEditingController textEditingController) {
+      TextEditingController textEditingController,
+      {double width = double.infinity}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -241,6 +265,7 @@ class _AddEmployeeState extends State<AddEmployee> {
         ),
         SizedBox(
           height: 40,
+          width: width,
           child: TextField(
             controller: textEditingController,
             decoration: InputDecoration(

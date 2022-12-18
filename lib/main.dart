@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_attendee/admin_console/admin_console.dart.dart';
+import 'package:smart_attendee/admin_console/providers/get_all_employees.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +18,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: AdminConsole(),
+      home: ChangeNotifierProvider(
+          create: (context) => GetAllEmployeeProvider(), child: AdminConsole()),
     );
   }
 }
