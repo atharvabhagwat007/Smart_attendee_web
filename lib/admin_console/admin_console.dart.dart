@@ -24,55 +24,58 @@ class _AdminConsoleState extends State<AdminConsole> {
     return Scaffold(
         appBar: AppBar(),
         body: Center(
-          child: Column(
-            children: [
-              if (Provider.of<GetAllEmployeeProvider>(context).isEmployeeLoaded)
-                ...Provider.of<GetAllEmployeeProvider>(context)
-                    .employeeList
-                    .map((e) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListTile(
-                      trailing: SubmitButton(
-                        isEditbutton: true,
-                        title: "Edit",
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                if (Provider.of<GetAllEmployeeProvider>(context)
+                    .isEmployeeLoaded)
+                  ...Provider.of<GetAllEmployeeProvider>(context)
+                      .employeeList
+                      .map((e) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                        trailing: SubmitButton(
+                          isEditbutton: true,
+                          title: "Edit",
+                        ),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.black,
+                          radius: 30,
+                          backgroundImage: Image.network(
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Image.asset(
+                                          "assets/images/profile_image.png"),
+                                  e.empPhotourl)
+                              .image,
+                        ),
+                        title: Text(
+                          e.empName,
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                        subtitle: Text(
+                          e.empMail,
+                          style: const TextStyle(fontSize: 14),
+                        ),
                       ),
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.black,
-                        radius: 30,
-                        backgroundImage: Image.network(
-                                errorBuilder: (context, error, stackTrace) =>
-                                    Image.asset(
-                                        "assets/images/profile_image.png"),
-                                e.empPhotourl)
-                            .image,
-                      ),
-                      title: Text(
-                        e.empName,
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                      subtitle: Text(
-                        e.empMail,
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                    ),
-                  );
-                }),
-              if (Provider.of<GetAllEmployeeProvider>(context)
-                      .isEmployeeLoaded ==
-                  false)
-                const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              InkWell(
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: ((context) => AddEmployee()));
-                  },
-                  child: SubmitButton(title: "Add Employee"))
-            ],
+                    );
+                  }),
+                if (Provider.of<GetAllEmployeeProvider>(context)
+                        .isEmployeeLoaded ==
+                    false)
+                  const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                InkWell(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: ((context) => AddEmployee()));
+                    },
+                    child: SubmitButton(title: "Add Employee"))
+              ],
+            ),
           ),
         ));
   }
