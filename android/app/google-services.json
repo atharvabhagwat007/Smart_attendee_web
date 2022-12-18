@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "1066328693183",
+    "project_id": "tusharproject-740b6",
+    "storage_bucket": "tusharproject-740b6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1066328693183:android:93b35ed9e73cf2cf6f290a",
+        "android_client_info": {
+          "package_name": "com.example.smart_attendance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1066328693183-6virk0oq3jpg13n81gmt5ndafs985qfb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.smart_attendance",
+            "certificate_hash": "4b064852eb517eab3296654cd1a5426197f2f462"
+          }
+        },
+        {
+          "client_id": "1066328693183-nkco72b6m3gc1lt8hsuia9epo8lu9tln.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFPNStr76RGTRR2xDua9CT7XChse03lyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1066328693183-nkco72b6m3gc1lt8hsuia9epo8lu9tln.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1066328693183-ur3v7p81m5fit9ekm0imjopobf7bavds.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.smartAttendance"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1066328693183:android:0d3adcb50349cdb56f290a",
+        "android_client_info": {
+          "package_name": "com.example.smart_attendee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1066328693183-nkco72b6m3gc1lt8hsuia9epo8lu9tln.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFPNStr76RGTRR2xDua9CT7XChse03lyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1066328693183-nkco72b6m3gc1lt8hsuia9epo8lu9tln.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1066328693183-ur3v7p81m5fit9ekm0imjopobf7bavds.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.smartAttendance"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
