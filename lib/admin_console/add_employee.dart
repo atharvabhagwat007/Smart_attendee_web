@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_attendee/admin_console/admin_console.dart.dart';
 import 'package:smart_attendee/admin_console/providers/add_employee_provider.dart';
 import 'package:smart_attendee/admin_console/providers/get_all_employees.dart';
+import 'package:smart_attendee/admin_console/widgets/custom_text_field.dart';
 import 'package:smart_attendee/admin_console/widgets/submit_button.dart';
 
 class AddEmployee extends StatefulWidget {
@@ -33,120 +34,118 @@ class _AddEmployeeState extends State<AddEmployee> {
       create: (context) => AddEmployeeProvider(),
       builder: (context, child) => Scaffold(
         backgroundColor: Colors.white12,
-        body: Padding(
-          padding: const EdgeInsets.all(30),
-          child: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10), color: Colors.white),
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _getTitle(context),
-                    const Divider(
-                      thickness: 1,
-                    ),
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: InkWell(
-                          onTap: () async {
-                            _pickImage();
-                          },
-                          child: CircleAvatar(
-                            radius: 50,
-                            backgroundImage: _file.path == "zz"
-                                ? Image.asset(
-                                    "assets/images/profile_image.png",
-                                    errorBuilder:
-                                        (context, error, stackTrace) =>
-                                            const Icon(Icons.error),
-                                  ).image
-                                : Image.memory(webImage).image,
-                          ),
+        body: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10), color: Colors.white),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _getTitle(context),
+                  const Divider(
+                    thickness: 1,
+                  ),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: InkWell(
+                        onTap: () async {
+                          _pickImage();
+                        },
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundImage: _file.path == "zz"
+                              ? Image.asset(
+                                  "assets/images/profile_image.png",
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Icon(Icons.error),
+                                ).image
+                              : Image.memory(webImage).image,
                         ),
                       ),
                     ),
-                    const Center(
-                      child: Text(
-                        "Please upload employee image",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
+                  ),
+                  const Center(
+                    child: Text(
+                      "Please upload employee image",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    _getNameForms(),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    _customTextField(
-                        "Enter employee Id*", "Employee Id", _empIdController,
-                        width: 300),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    _getEmailPassForms(),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    _getShiftDropDown(),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        if (_firstNameController.text.isEmpty ||
-                            _lastNameController.text.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: SizedBox(
-                                height: 20,
-                                child: Center(
-                                    child: Text("Please enter all fields")),
-                              ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  _getNameForms(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CustomTextField(
+                      title: "Enter employee Id*",
+                      labelText: "Employee Id",
+                      textEditingController: _empIdController,
+                      width: 300),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  _getEmailPassForms(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  _getShiftDropDown(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      if (_firstNameController.text.isEmpty ||
+                          _lastNameController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: SizedBox(
+                              height: 20,
+                              child: Center(
+                                  child: Text("Please enter all fields")),
                             ),
-                          );
-                        } else {
-                          context
-                              .read<AddEmployeeProvider>()
-                              .addEmoplyee(
-                                  empId: _empIdController.text,
-                                  empMail: _empEmailController.text,
-                                  empPassword: _empPasswordController.text,
-                                  webImage: webImage,
-                                  context: context,
-                                  empPhotoUrl:
-                                      "https://firebasestorage.googleapis.com/v0/b/tusharproject-740b6.appspot.com/o/gfg.jpg?alt=media&token=cb42a4a6-a167-41c9-a716-11d020ffed12",
-                                  empName:
-                                      "${_firstNameController.text} ${_lastNameController.text}",
-                                  empShift: dropdownValue)
-                              .then((value) {
-                            if (value == "true") {
-                              // Navigator.pop(context);
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => ChangeNotifierProvider(
-                                            create: (context) =>
-                                                GetAllEmployeeProvider(),
-                                            child: AdminConsole(),
-                                          )),
-                                  (route) => false);
-                            }
-                          });
-                        }
-                      },
-                      child: SubmitButton(
-                        title: "Submit",
-                      ),
-                    )
-                  ],
-                ),
+                          ),
+                        );
+                      } else {
+                        context
+                            .read<AddEmployeeProvider>()
+                            .addEmoplyee(
+                                empId: _empIdController.text,
+                                empMail: _empEmailController.text,
+                                empPassword: _empPasswordController.text,
+                                webImage: webImage,
+                                context: context,
+                                empPhotoUrl:
+                                    "https://firebasestorage.googleapis.com/v0/b/tusharproject-740b6.appspot.com/o/gfg.jpg?alt=media&token=cb42a4a6-a167-41c9-a716-11d020ffed12",
+                                empName:
+                                    "${_firstNameController.text} ${_lastNameController.text}",
+                                empShift: dropdownValue)
+                            .then((value) {
+                          if (value == "true") {
+                            // Navigator.pop(context);
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => ChangeNotifierProvider(
+                                          create: (context) =>
+                                              GetAllEmployeeProvider(),
+                                          child: AdminConsole(),
+                                        )),
+                                (route) => false);
+                          }
+                        });
+                      }
+                    },
+                    child: SubmitButton(
+                      title: "Submit",
+                    ),
+                  )
+                ],
               ),
             ),
           ),
@@ -195,15 +194,19 @@ class _AddEmployeeState extends State<AddEmployee> {
     return Row(
       children: [
         Expanded(
-          child: _customTextField(
-              "First Name*", "First Name", _firstNameController),
+          child: CustomTextField(
+              title: "First Name*",
+              labelText: "First Name",
+              textEditingController: _firstNameController),
         ),
         const SizedBox(
           width: 30,
         ),
         Expanded(
-          child:
-              _customTextField("Last Name*", "Last Name", _lastNameController),
+          child: CustomTextField(
+              title: "Last Name*",
+              labelText: "Last Name",
+              textEditingController: _lastNameController),
         ),
       ],
     );
@@ -213,15 +216,19 @@ class _AddEmployeeState extends State<AddEmployee> {
     return Row(
       children: [
         Expanded(
-          child: _customTextField(
-              "Employee Email*", "Emp email", _empEmailController),
+          child: CustomTextField(
+              title: "Employee Email*",
+              labelText: "Emp email",
+              textEditingController: _empEmailController),
         ),
         const SizedBox(
           width: 30,
         ),
         Expanded(
-          child: _customTextField("Enter a password for employee*", "Password",
-              _empPasswordController),
+          child: CustomTextField(
+              title: "Enter a password for employee*",
+              labelText: "Password",
+              textEditingController: _empPasswordController),
         ),
       ],
     );
@@ -259,35 +266,5 @@ class _AddEmployeeState extends State<AddEmployee> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: SizedBox(height: 20, child: Text('No file selected'))));
     }
-  }
-
-  _customTextField(String title, String labelText,
-      TextEditingController textEditingController,
-      {double width = double.infinity}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        SizedBox(
-          height: 40,
-          width: width,
-          child: TextField(
-            controller: textEditingController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              labelText: labelText,
-            ),
-          ),
-        )
-      ],
-    );
   }
 }

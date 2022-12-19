@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:smart_attendee/admin_console/add_employee.dart';
+import 'package:smart_attendee/admin_console/edit_employee.dart';
 import 'package:smart_attendee/admin_console/providers/get_all_employees.dart';
 import 'package:smart_attendee/admin_console/widgets/submit_button.dart';
 
@@ -34,29 +35,49 @@ class _AdminConsoleState extends State<AdminConsole> {
                       .map((e) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: ListTile(
-                        trailing: SubmitButton(
-                          isEditbutton: true,
-                          title: "Edit",
-                        ),
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.black,
-                          radius: 30,
-                          backgroundImage: Image.network(
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Image.asset(
-                                          "assets/images/profile_image.png"),
-                                  e.empPhotourl)
-                              .image,
-                        ),
-                        title: Text(
-                          e.empName,
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
-                        subtitle: Text(
-                          e.empMail,
-                          style: const TextStyle(fontSize: 14),
+                      child: SizedBox(
+                        child: Column(
+                          children: [
+                            ListTile(
+                              trailing: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) => EditEmployeeScreen(
+                                                employee: e,
+                                              )));
+                                },
+                                child: SubmitButton(
+                                  isEditbutton: true,
+                                  title: "Edit",
+                                ),
+                              ),
+                              leading: CircleAvatar(
+                                backgroundColor: Colors.black,
+                                radius: 30,
+                                backgroundImage: Image.network(
+                                        errorBuilder: (context, error,
+                                                stackTrace) =>
+                                            Image.asset(
+                                                "assets/images/profile_image.png"),
+                                        e.empPhotourl)
+                                    .image,
+                              ),
+                              title: Text(
+                                e.empName,
+                                style: const TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w600),
+                              ),
+                              subtitle: Text(
+                                e.empMail,
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ),
+                            const Divider(
+                              thickness: 2,
+                            )
+                          ],
                         ),
                       ),
                     );
