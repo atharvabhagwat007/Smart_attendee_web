@@ -10,14 +10,14 @@ import 'package:smart_attendee/admin_console/providers/get_all_employees.dart';
 import 'package:smart_attendee/admin_console/widgets/custom_text_field.dart';
 import 'package:smart_attendee/admin_console/widgets/submit_button.dart';
 
-class AddEmployee extends StatefulWidget {
-  AddEmployee({super.key});
+class AddEmployeeScreen extends StatefulWidget {
+  AddEmployeeScreen({super.key});
 
   @override
-  State<AddEmployee> createState() => _AddEmployeeState();
+  State<AddEmployeeScreen> createState() => _AddEmployeeScreenState();
 }
 
-class _AddEmployeeState extends State<AddEmployee> {
+class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
   List<String> shiftList = ["Morning", "Evening"];
   final TextEditingController _firstNameController = TextEditingController();
   File _file = File("zz");
