@@ -67,7 +67,7 @@ class _AdminConsoleState extends State<AdminConsole> {
                 const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
-                    "Recently added employees",
+                    "All employees",
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
                   ),
                 ),
