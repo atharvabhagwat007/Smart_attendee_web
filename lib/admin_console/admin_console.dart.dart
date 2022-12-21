@@ -105,20 +105,22 @@ class _AdminConsoleState extends State<AdminConsole> {
                                 ),
                                 ListTile(
                                   trailing: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (_) =>
-                                                  EditEmployeeScreen(
-                                                    employee: e,
-                                                  )));
-                                    },
-                                    child: SubmitButton(
-                                      isEditbutton: true,
-                                      title: "Edit",
-                                    ),
-                                  ),
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (_) =>
+                                                    EditEmployeeScreen(
+                                                      employee: e,
+                                                    )));
+                                      },
+                                      child: const Text(
+                                        "Edit",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      )),
                                   leading: CircleAvatar(
                                     backgroundColor: Colors.black,
                                     radius: 30,

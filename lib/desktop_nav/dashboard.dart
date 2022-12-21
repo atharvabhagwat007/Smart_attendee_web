@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:smart_attendee/admin_console/admin_console.dart.dart';
 import 'package:smart_attendee/desktop_nav/models/nav_option.dart';
 
-
 class Dashboard extends StatefulWidget {
   const Dashboard({
     Key? key,
@@ -15,11 +14,9 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   final List<NavOption> _navigationDestinations = <NavOption>[
     const NavOption(
-        textLabel: 'Employee List',
-        menuIcon: Icons.list_alt_rounded),
+        textLabel: 'Employee List', menuIcon: Icons.list_alt_rounded),
     const NavOption(
-        textLabel: 'Add Employee',
-        menuIcon: Icons.add_reaction_rounded),
+        textLabel: 'Add Employee', menuIcon: Icons.add_reaction_rounded),
   ];
   @override
   Widget build(BuildContext context) {
@@ -76,8 +73,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                         extended: true,
                         labelType: NavigationRailLabelType.none,
                         selectedIndex: 0,
-                        onDestinationSelected: (index) {
-                        },
+                        onDestinationSelected: (index) {},
                       ),
                     ),
                   ),
