@@ -72,7 +72,7 @@ class _AdminConsoleState extends State<AdminConsole> {
                   ),
                 ),
               const SizedBox(
-                height: 30,
+                height: 15,
               ),
               if (Provider.of<GetAllEmployeeProvider>(context).isEmployeeLoaded)
                 Container(
