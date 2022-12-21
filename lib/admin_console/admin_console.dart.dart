@@ -32,7 +32,7 @@ class _AdminConsoleState extends State<AdminConsole> {
             children: [
               if (Provider.of<GetAllEmployeeProvider>(context).isEmployeeLoaded)
                 const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20.0),
+                  padding: EdgeInsets.symmetric(vertical: 40.0),
                   child: Text(
                     "Good Morning ",
                     style: TextStyle(
@@ -87,8 +87,6 @@ class _AdminConsoleState extends State<AdminConsole> {
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white,
                   ),
-
-                  // boxShadow: [BoxShadow(blurRadius: 0.5, spreadRadius: 1)]),
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Column(
@@ -99,8 +97,12 @@ class _AdminConsoleState extends State<AdminConsole> {
                           padding: const EdgeInsets.symmetric(horizontal: 30.0),
                           child: SizedBox(
                             child: ListView(
+                              reverse: true,
                               shrinkWrap: true,
                               children: [
+                                const Divider(
+                                  thickness: 2,
+                                ),
                                 ListTile(
                                   trailing: InkWell(
                                     onTap: () {
@@ -139,9 +141,6 @@ class _AdminConsoleState extends State<AdminConsole> {
                                     style: const TextStyle(fontSize: 14),
                                   ),
                                 ),
-                                const Divider(
-                                  thickness: 2,
-                                )
                               ],
                             ),
                           ),
