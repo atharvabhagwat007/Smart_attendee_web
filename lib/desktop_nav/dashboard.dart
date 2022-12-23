@@ -1,28 +1,88 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:smart_attendee/admin_console/admin_console.dart.dart';
 import 'package:smart_attendee/desktop_nav/models/nav_option.dart';
-
+import 'package:smart_attendee/routing/routes.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({
     Key? key,
+    required this.tab,
   }) : super(key: key);
+
+  final String tab;
 
   @override
   State<Dashboard> createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
+  Widget _tabBody = const SizedBox();
+  late int _selectedIndex;
   final List<NavOption> _navigationDestinations = <NavOption>[
+    const NavOption(textLabel: 'Overview', menuIcon: Icons.dashboard),
     const NavOption(
-        textLabel: 'Employee List',
-        menuIcon: Icons.list_alt_rounded),
+        textLabel: 'Add Client',
+        menuIcon: Icons.supervised_user_circle_rounded),
     const NavOption(
-        textLabel: 'Add Employee',
-        menuIcon: Icons.add_reaction_rounded),
+        textLabel: 'Add Employee', menuIcon: Icons.add_reaction_rounded),
+    const NavOption(textLabel: 'Add Shift', menuIcon: Icons.timelapse_rounded),
+    const NavOption(textLabel: 'Reports', menuIcon: Icons.report),
   ];
+
+  int _indexFrom(String tab) {
+    switch (tab) {
+      case 'overview':
+        return 0;
+      case 'add_client':
+        return 1;
+      case 'add_employee':
+        return 2;
+      case 'add_shift':
+        return 3;
+      case 'reports':
+        return 4;
+      default:
+        return 0;
+    }
+  }
+
+  void _selectTab(int index) {
+    if (index == 0) {
+      _tabBody = const AdminConsole();
+    } else if (index == 1) {
+      _tabBody = const SizedBox();
+    } else if (index == 2) {
+      _tabBody = const SizedBox();
+    } else if (index == 3) {
+      _tabBody = const SizedBox();
+    } else if (index == 4) {
+      _tabBody = const SizedBox();
+    } else {
+      _tabBody = const SizedBox();
+    }
+  }
+
+  void _onDestinationSelected(int index) async {
+    const userRoute = RouterPaths.dashboard;
+    _selectedIndex = index;
+    if (index == 0) {
+      context.goNamed(userRoute, params: {'tab': 'overview'});
+    } else if (index == 1) {
+      context.goNamed(userRoute, params: {'tab': 'add_client'});
+    } else if (index == 2) {
+      context.goNamed(userRoute, params: {'tab': 'add_employee'});
+    } else if (index == 3) {
+      context.goNamed(userRoute, params: {'tab': 'add_shift'});
+    } else if (index == 4) {
+      context.goNamed(userRoute, params: {'tab': 'reports'});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _selectedIndex = _indexFrom(widget.tab);
+    _selectTab(_selectedIndex);
     return Scaffold(
       body: Row(
         children: [
@@ -76,8 +136,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                         extended: true,
                         labelType: NavigationRailLabelType.none,
                         selectedIndex: 0,
-                        onDestinationSelected: (index) {
-                        },
+                        onDestinationSelected: _onDestinationSelected,
                       ),
                     ),
                   ),
@@ -86,9 +145,9 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
             },
           ),
           const VerticalDivider(thickness: 1, width: 1),
-          const Expanded(
+          Expanded(
             child: Center(
-              child: AdminConsole(),
+              child: _tabBody,
             ),
           ),
         ],

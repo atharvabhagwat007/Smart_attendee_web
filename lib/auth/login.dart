@@ -149,7 +149,8 @@ class _LoginViewState extends State<LoginView> {
                           // sign in with email and password
                           Provider.of<AuthGaurd>(context, listen: false)
                               .loggedIn = true;
-                          context.goNamed(RouterPaths.dashboard);
+                          context.goNamed(RouterPaths.dashboard,
+                              params: {'tab': 'overview'});
                         },
                         child: Text(
                           'Login',

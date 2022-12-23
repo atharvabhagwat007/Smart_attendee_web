@@ -1,5 +1,4 @@
 import 'package:go_router/go_router.dart';
-import 'package:smart_attendee/admin_console/admin_console.dart.dart';
 import 'package:smart_attendee/desktop_nav/dashboard.dart';
 
 import '../auth/login.dart';
@@ -14,38 +13,43 @@ class WebRouter {
   WebRouter(this.loginGaurd);
 
   late final router = GoRouter(
-      refreshListenable: loginGaurd,
-      initialLocation: RouterPaths.homePath,
-      debugLogDiagnostics: true,
-      routes: <GoRoute>[
-        GoRoute(
-          name: RouterPaths.login,
-          path: RouterPaths.loginPath,
-          builder: (context, state) => const LoginView(),
-        ),
-        GoRoute(
-            name: RouterPaths.home,
-            path: RouterPaths.homePath,
-            redirect: (context, state) =>
-                state.namedLocation(RouterPaths.dashboard),
-            routes: [
-              GoRoute(
-                name: RouterPaths.dashboard,
-                path: RouterPaths.dashboardPath,
-                builder: (context, state) => const Dashboard(),
-              )
-            ]),
-      ],
-      redirect: (context, state) {
-        final loginLoc = state.namedLocation(RouterPaths.login);
-        final loggingIn = state.subloc == loginLoc;
-        final loggedIn = loginGaurd.loggedInState;
-        final rootLoc = state.namedLocation(RouterPaths.home);
+    refreshListenable: loginGaurd,
+    debugLogDiagnostics: true,
+    routes: <GoRoute>[
+      GoRoute(
+        name: RouterPaths.login,
+        path: RouterPaths.loginPath,
+        builder: (context, state) => const LoginView(),
+      ),
+      GoRoute(
+          name: RouterPaths.home,
+          path: RouterPaths.homePath,
+          redirect: (context, state) =>
+              state.namedLocation(RouterPaths.dashboard, params: {
+                'tab': 'overview',
+              }),
+          routes: [
+            GoRoute(
+              name: RouterPaths.dashboard,
+              path:
+                  '${RouterPaths.dashboardPath}/:tab(overview|add_client|add_employee|add_shift|reports)',
+              builder: (context, state) => Dashboard(
+                tab: state.params['tab']!,
+              ),
+            )
+          ]),
+    ],
+    redirect: (context, state) {
+      final loginLoc = state.namedLocation(RouterPaths.login);
+      final loggingIn = state.subloc == loginLoc;
+      final loggedIn = loginGaurd.loggedInState;
+      final rootLoc = state.namedLocation(RouterPaths.home);
 
-        if (!loggedIn && !loggingIn) return loginLoc;
-        if (loggedIn && (loggingIn)) {
-          return rootLoc;
-        }
-        return null;
-      });
+      if (!loggedIn && !loggingIn) return loginLoc;
+      if (loggedIn && (loggingIn)) {
+        return rootLoc;
+      }
+      return null;
+    },
+  );
 }
