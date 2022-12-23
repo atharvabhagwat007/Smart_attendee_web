@@ -67,8 +67,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1066328693183',
     projectId: 'tusharproject-740b6',
     storageBucket: 'tusharproject-740b6.appspot.com',
-    androidClientId: '1066328693183-6virk0oq3jpg13n81gmt5ndafs985qfb.apps.googleusercontent.com',
-    iosClientId: '1066328693183-d2921t28j00ogvli93dpfpb580kj72o5.apps.googleusercontent.com',
+    androidClientId:
+        '1066328693183-6virk0oq3jpg13n81gmt5ndafs985qfb.apps.googleusercontent.com',
+    iosClientId:
+        '1066328693183-d2921t28j00ogvli93dpfpb580kj72o5.apps.googleusercontent.com',
     iosBundleId: 'com.example.smartAttendee',
   );
 
@@ -78,8 +80,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1066328693183',
     projectId: 'tusharproject-740b6',
     storageBucket: 'tusharproject-740b6.appspot.com',
-    androidClientId: '1066328693183-6virk0oq3jpg13n81gmt5ndafs985qfb.apps.googleusercontent.com',
-    iosClientId: '1066328693183-d2921t28j00ogvli93dpfpb580kj72o5.apps.googleusercontent.com',
+    androidClientId:
+        '1066328693183-6virk0oq3jpg13n81gmt5ndafs985qfb.apps.googleusercontent.com',
+    iosClientId:
+        '1066328693183-d2921t28j00ogvli93dpfpb580kj72o5.apps.googleusercontent.com',
     iosBundleId: 'com.example.smartAttendee',
   );
 }

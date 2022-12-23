@@ -93,7 +93,5 @@ class AddEmployeeProvider with ChangeNotifier {
         return "false";
       }
     }
-
-    return "false";
   }
 }

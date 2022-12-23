@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
               final router =
                   Provider.of<WebRouter>(context, listen: false).router;
               return MaterialApp.router(
-                title: 'DietOsure Partner',
+                title: 'Smart attendee',
                 debugShowCheckedModeBanner: false,
                 routeInformationParser: router.routeInformationParser,
                 routerDelegate: router.routerDelegate,
