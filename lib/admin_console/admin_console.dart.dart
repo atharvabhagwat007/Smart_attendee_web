@@ -157,16 +157,6 @@ class _AdminConsoleState extends State<AdminConsole> {
                 const Center(
                   child: CircularProgressIndicator(),
                 ),
-              if (Provider.of<GetAllEmployeeProvider>(context)
-                      .isEmployeeLoaded ==
-                  true)
-                InkWell(
-                    onTap: () {
-                      showDialog(
-                          context: context,
-                          builder: ((context) => AddEmployeeScreen()));
-                    },
-                    child: SubmitButton(title: "Add Employee"))
             ],
           ),
         ),

@@ -28,8 +28,8 @@ class WebRouter {
               state.namedLocation(RouterPaths.dashboard, params: {
                 'tab': 'overview',
               }),
-          routes: [
-            GoRoute(
+              ),
+          GoRoute(
               name: RouterPaths.dashboard,
               path:
                   '${RouterPaths.dashboardPath}/:tab(overview|add_client|add_employee|add_shift|reports)',
@@ -37,7 +37,6 @@ class WebRouter {
                 tab: state.params['tab']!,
               ),
             )
-          ]),
     ],
     redirect: (context, state) {
       final loginLoc = state.namedLocation(RouterPaths.login);

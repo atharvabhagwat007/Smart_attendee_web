@@ -4,6 +4,8 @@ import 'package:smart_attendee/admin_console/admin_console.dart.dart';
 import 'package:smart_attendee/desktop_nav/models/nav_option.dart';
 import 'package:smart_attendee/routing/routes.dart';
 
+import '../admin_console/add_employee_screen.dart';
+
 class Dashboard extends StatefulWidget {
   const Dashboard({
     Key? key,
@@ -53,7 +55,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     } else if (index == 1) {
       _tabBody = const SizedBox();
     } else if (index == 2) {
-      _tabBody = const SizedBox();
+      _tabBody = const AddEmployeeScreen();
     } else if (index == 3) {
       _tabBody = const SizedBox();
     } else if (index == 4) {

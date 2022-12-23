@@ -3,5 +3,5 @@ class RouterPaths {
 
   static const homePath = '/',
       loginPath = '/login',
-      dashboardPath = 'dashboard';
+      dashboardPath = '/dashboard';
 }

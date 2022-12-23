@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_attendee/admin_console/admin_console.dart.dart';
@@ -9,9 +10,10 @@ import 'package:smart_attendee/admin_console/providers/add_employee_provider.dar
 import 'package:smart_attendee/admin_console/providers/get_all_employees.dart';
 import 'package:smart_attendee/admin_console/widgets/custom_text_field.dart';
 import 'package:smart_attendee/admin_console/widgets/submit_button.dart';
+import 'package:smart_attendee/routing/routes.dart';
 
 class AddEmployeeScreen extends StatefulWidget {
-  AddEmployeeScreen({super.key});
+  const AddEmployeeScreen({super.key});
 
   @override
   State<AddEmployeeScreen> createState() => _AddEmployeeScreenState();
@@ -127,16 +129,17 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                 empShift: dropdownValue)
                             .then((value) {
                           if (value == "true") {
+                            context.goNamed(RouterPaths.dashboard);
                             // Navigator.pop(context);
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => ChangeNotifierProvider(
-                                          create: (context) =>
-                                              GetAllEmployeeProvider(),
-                                          child: AdminConsole(),
-                                        )),
-                                (route) => false);
+                            // Navigator.pushAndRemoveUntil(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (_) => ChangeNotifierProvider(
+                            //               create: (context) =>
+                            //                   GetAllEmployeeProvider(),
+                            //               child: AdminConsole(),
+                            //             )),
+                            //     (route) => false);
                           }
                         });
                       }
@@ -238,17 +241,12 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Text(
+      children: const [
+        Text(
           "Add Employee",
           style: TextStyle(
               color: Colors.black87, fontWeight: FontWeight.w700, fontSize: 30),
         ),
-        IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.close))
       ],
     );
   }
