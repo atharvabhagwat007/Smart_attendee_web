@@ -6,6 +6,7 @@ import 'dart:convert';
 
 class EmployeeModel {
   EmployeeModel({
+    required this.isSelected,
     required this.attendance,
     required this.clientId,
     required this.clientLocation,
@@ -32,6 +33,7 @@ class EmployeeModel {
   final String empPwd;
   final List<dynamic> empShift;
   final List<dynamic> overtime;
+  bool isSelected = false;
 
   factory EmployeeModel.fromRawJson(String str) =>
       EmployeeModel.fromJson(json.decode(str));
@@ -39,20 +41,20 @@ class EmployeeModel {
   String toRawJson() => json.encode(toJson());
 
   factory EmployeeModel.fromJson(Map<String, dynamic> json) => EmployeeModel(
-        attendance: List<Attendance>.from(
-            json["attendance"].map((x) => Attendance.fromJson(x))),
-        clientId: json["client_id"],
-        clientLocation: json["client_location"],
-        clientName: json["client_name"],
-        clientSublocation: json["client_sublocation"],
-        empId: json["emp_id"],
-        empMail: json["emp_mail"],
-        empName: json["emp_name"],
-        empPhotourl: json["emp_photourl"],
-        empPwd: json["emp_pwd"],
-        empShift: List<dynamic>.from(json["emp_shift"].map((x) => x)),
-        overtime: List<dynamic>.from(json["overtime"].map((x) => x)),
-      );
+      attendance: List<Attendance>.from(
+          json["attendance"].map((x) => Attendance.fromJson(x))),
+      clientId: json["client_id"],
+      clientLocation: json["client_location"],
+      clientName: json["client_name"],
+      clientSublocation: json["client_sublocation"],
+      empId: json["emp_id"],
+      empMail: json["emp_mail"],
+      empName: json["emp_name"],
+      empPhotourl: json["emp_photourl"],
+      empPwd: json["emp_pwd"],
+      empShift: List<dynamic>.from(json["emp_shift"].map((x) => x)),
+      overtime: List<dynamic>.from(json["overtime"].map((x) => x)),
+      isSelected: false);
 
   Map<String, dynamic> toJson() => {
         "attendance": List<dynamic>.from(attendance.map((x) => x.toJson())),

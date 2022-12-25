@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_attendee/admin_console/providers/add_client_provider.dart';
 import 'package:smart_attendee/admin_console/providers/get_all_employees.dart';
 import 'package:smart_attendee/auth/provider/auth_provider.dart';
 
@@ -29,6 +30,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<AddClientProvider>(
+          create: (context) => AddClientProvider(),
+        ),
         ChangeNotifierProvider<AuthGaurd>(
           lazy: false,
           create: (BuildContext createContext) => logInState,
