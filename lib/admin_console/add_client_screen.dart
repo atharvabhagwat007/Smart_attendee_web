@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:smart_attendee/admin_console/admin_console.dart.dart';
 import 'package:smart_attendee/admin_console/providers/add_client_provider.dart';
 
 import 'package:smart_attendee/admin_console/providers/get_all_employees.dart';
@@ -55,53 +56,43 @@ class _AddClientScreenState extends State<AddClientScreen> {
                 const SizedBox(
                   height: 30,
                 ),
-                InkWell(
-                  onTap: () {
-                    if (_clientIdController.text.isEmpty ||
-                        _clientLocationController.text.isEmpty ||
-                        _clientNameController.text.isEmpty ||
-                        _clientSubLocationController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: SizedBox(
-                            height: 20,
-                            child:
-                                Center(child: Text("Please enter all fields")),
+                Consumer<AddClientProvider>(
+                  builder: (context, value, child) => InkWell(
+                    onTap: () {
+                      if (_clientIdController.text.isEmpty ||
+                          _clientLocationController.text.isEmpty ||
+                          _clientNameController.text.isEmpty ||
+                          _clientSubLocationController.text.isEmpty ||
+                          value.selectedEmployee.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: SizedBox(
+                              height: 20,
+                              child: Center(
+                                  child: Text("Please enter all fields")),
+                            ),
                           ),
-                        ),
-                      );
-                    } else {
-                      // context
-                      //     .read<AddEmployeeProvider>()
-                      //     .addEmoplyee(
-                      //         empId: _empIdController.text,
-                      //         empMail: _empEmailController.text,
-                      //         empPassword: _empPasswordController.text,
-                      //         webImage: webImage,
-                      //         context: context,
-                      //         empPhotoUrl:
-                      //             "https://firebasestorage.googleapis.com/v0/b/tusharproject-740b6.appspot.com/o/gfg.jpg?alt=media&token=cb42a4a6-a167-41c9-a716-11d020ffed12",
-                      //         empName:
-                      //             "${_firstNameController.text} ${_lastNameController.text}",
-                      //         empShift: dropdownValue)
-                      //     .then((value) {
-                      //   if (value == "true") {
-                      //     // Navigator.pop(context);
-                      //     Navigator.pushAndRemoveUntil(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //             builder: (_) => ChangeNotifierProvider(
-                      //                   create: (context) =>
-                      //                       GetAllEmployeeProvider(),
-                      //                   child: AdminConsole(),
-                      //                 )),
-                      //         (route) => false);
-                      //   }
-                      // });
-                    }
-                  },
-                  child: SubmitButton(
-                    title: "Submit",
+                        );
+                      } else {
+                        value.addClient(
+                            context: context,
+                            adminId: "",
+                            clientCity: _clientSubLocationController.text,
+                            clientCountry: _clientLocationController.text,
+                            clientId: _clientIdController.text,
+                            clientName: _clientNameController.text,
+                            employeeList: [] //TODO ADDING LIST FROM PROVIDER
+                            ).then((value) {
+                          if (value == "true") {
+                            // Navigator.pop(context);
+                            print("added");
+                          }
+                        });
+                      }
+                    },
+                    child: SubmitButton(
+                      title: "Submit",
+                    ),
                   ),
                 )
               ],
@@ -188,8 +179,8 @@ class _AddClientScreenState extends State<AddClientScreen> {
         decoration: BoxDecoration(
             border: Border.all(), borderRadius: BorderRadius.circular(8)),
         child: const Padding(
-          padding: EdgeInsets.all(10),
-          child: Text("Add Employes"),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Text("Add Employees"),
         ),
       ),
     );
