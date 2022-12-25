@@ -263,13 +263,6 @@ class _AddClientScreenState extends State<AddClientScreen> {
                           ),
                         ),
                       ),
-                      Material(
-                        child: IconButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            icon: const Icon(Icons.close)),
-                      )
                     ],
                   ),
                 ),

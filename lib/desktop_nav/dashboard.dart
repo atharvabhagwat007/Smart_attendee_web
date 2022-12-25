@@ -54,7 +54,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     if (index == 0) {
       _tabBody = const AdminConsole();
     } else if (index == 1) {
-      _tabBody = AddClientScreen();
+      _tabBody = const AddClientScreen();
     } else if (index == 2) {
       _tabBody = const AddEmployeeScreen();
     } else if (index == 3) {
