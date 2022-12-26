@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
-import 'package:smart_attendee/admin_console/admin_console.dart.dart';
 import 'package:smart_attendee/admin_console/providers/add_client_provider.dart';
-
 import 'package:smart_attendee/admin_console/providers/get_all_employees.dart';
 import 'package:smart_attendee/admin_console/widgets/custom_text_field.dart';
 import 'package:smart_attendee/admin_console/widgets/submit_button.dart';
@@ -193,80 +190,106 @@ class _AddClientScreenState extends State<AddClientScreen> {
             Consumer<AddClientProvider>(builder: (context, value, child) {
               return Padding(
                 padding: const EdgeInsets.all(100.0),
-                child: Container(
-                  decoration: BoxDecoration(color: Colors.green.shade200),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount:
-                                Provider.of<GetAllEmployeeProvider>(context)
-                                    .employeeCount,
-                            itemBuilder: (context, index) {
-                              List<EmployeeModel> employeeList =
-                                  Provider.of<GetAllEmployeeProvider>(context)
-                                      .employeeList;
-                              return Material(
-                                child: Container(
-                                  color: employeeList[index].isSelected
-                                      ? Colors.green.shade200
-                                      : Colors.white,
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (employeeList[index].isSelected) {
-                                        value.selectEmployee(
-                                            employeeList[index]);
-                                        employeeList[index].isSelected = false;
-                                      } else {
-                                        value.selectEmployee(
-                                            employeeList[index]);
-                                        employeeList[index].isSelected = true;
-                                      }
-                                    },
-                                    child: ListTile(
-                                      leading: CircleAvatar(
-                                        backgroundColor: Colors.black,
-                                        radius: 30,
-                                        backgroundImage: Image.network(
-                                                errorBuilder: (context, error,
-                                                        stackTrace) =>
-                                                    Image.asset(
-                                                        "assets/images/profile_image.png"),
-                                                employeeList[index].empPhotourl)
-                                            .image,
-                                      ),
-                                      title: Text(
-                                        employeeList[index].empName,
-                                        style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      subtitle: Text(
-                                        employeeList[index].empMail,
-                                        style: const TextStyle(fontSize: 14),
-                                      ),
-                                      trailing: employeeList[index].isSelected
-                                          ? const Text(
-                                              "Selected",
-                                              style: TextStyle(fontSize: 18),
-                                            )
-                                          : const SizedBox.shrink(),
-                                    ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Material(
+                              child: Padding(
+                                padding: EdgeInsets.all(30.0),
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    "Select from the following employees",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600),
                                   ),
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                            ),
+                            Provider.of<GetAllEmployeeProvider>(context)
+                                    .isEmployeeLoaded
+                                ? _getAllEmployeesList(value)
+                                : const Material(
+                                    child: Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(30.0),
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                  ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               );
             }));
+  }
+
+  _getAllEmployeesList(value) {
+    return Expanded(
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: Provider.of<GetAllEmployeeProvider>(context).employeeCount,
+        itemBuilder: (context, index) {
+          List<EmployeeModel> employeeList =
+              Provider.of<GetAllEmployeeProvider>(context).employeeList;
+          return Material(
+            child: Container(
+              color: employeeList[index].isSelected
+                  ? Colors.green.shade200
+                  : Colors.white,
+              child: InkWell(
+                onTap: () {
+                  if (employeeList[index].isSelected) {
+                    value.selectEmployee(employeeList[index]);
+                    employeeList[index].isSelected = false;
+                  } else {
+                    value.selectEmployee(employeeList[index]);
+                    employeeList[index].isSelected = true;
+                  }
+                },
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.black,
+                    radius: 30,
+                    backgroundImage: Image.network(
+                            errorBuilder: (context, error, stackTrace) =>
+                                Image.asset("assets/images/profile_image.png"),
+                            employeeList[index].empPhotourl)
+                        .image,
+                  ),
+                  title: Text(
+                    employeeList[index].empName,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  subtitle: Text(
+                    employeeList[index].empMail,
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                  trailing: employeeList[index].isSelected
+                      ? const Text(
+                          "Selected",
+                          style: TextStyle(fontSize: 18),
+                        )
+                      : const SizedBox.shrink(),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 }
