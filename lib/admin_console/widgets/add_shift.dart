@@ -95,6 +95,7 @@ class _AddShiftState extends State<AddShift> {
                     context
                         .read<AddEmployeeShiftProvider>()
                         .addEmployeeShift(
+                          employeeId: widget.employeeId,
                           employeeShift: newShift,
                           context: context,
                         )
