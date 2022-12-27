@@ -17,7 +17,6 @@ class GetAllEmployeeProvider with ChangeNotifier {
         isEmployeeLoaded = true;
 
         notifyListeners();
-        print(employeeList);
       }
     } catch (e) {
       print(e);

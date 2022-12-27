@@ -22,16 +22,16 @@ class EmployeeModel {
   });
 
   final List<Attendance> attendance;
-  final String clientId;
-  final String clientLocation;
-  final String clientName;
-  final String clientSublocation;
+  final String? clientId;
+  final String? clientLocation;
+  final String? clientName;
+  final String? clientSublocation;
   final String empId;
   final String empMail;
   final String empName;
   final String empPhotourl;
   final String empPwd;
-  final List<dynamic> empShift;
+  final List<EmployeeShift> empShift;
   final List<dynamic> overtime;
   bool isSelected = false;
 
@@ -41,18 +41,21 @@ class EmployeeModel {
   String toRawJson() => json.encode(toJson());
 
   factory EmployeeModel.fromJson(Map<String, dynamic> json) => EmployeeModel(
-      attendance: List<Attendance>.from(
-          json["attendance"].map((x) => Attendance.fromJson(x))),
-      clientId: json["client_id"],
-      clientLocation: json["client_location"],
-      clientName: json["client_name"],
-      clientSublocation: json["client_sublocation"],
-      empId: json["emp_id"],
-      empMail: json["emp_mail"],
-      empName: json["emp_name"],
-      empPhotourl: json["emp_photourl"],
-      empPwd: json["emp_pwd"],
-      empShift: List<dynamic>.from(json["emp_shift"].map((x) => x)),
+      attendance: List<Attendance>.from(json["attendance"].map((x) {
+        return Attendance.fromJson(Map<String, String?>.from(x));
+      })),
+      clientId: json["client_id"] as String?,
+      clientLocation: json["client_location"] as String?,
+      clientName: json["client_name"] as String?,
+      clientSublocation: json["client_sublocation"] as String?,
+      empId: json["emp_id"] as String,
+      empMail: json["emp_mail"] as String,
+      empName: json["emp_name"] as String,
+      empPhotourl: json["emp_photourl"] as String,
+      empPwd: json["emp_pwd"] as String,
+      empShift: List<EmployeeShift>.from(json["emp_shift"].map((x) {
+        return EmployeeShift.fromJson(Map<String, String?>.from(x));
+      })),
       overtime: List<dynamic>.from(json["overtime"].map((x) => x)),
       isSelected: false);
 
@@ -67,7 +70,7 @@ class EmployeeModel {
         "emp_name": empName,
         "emp_photourl": empPhotourl,
         "emp_pwd": empPwd,
-        "emp_shift": List<dynamic>.from(empShift.map((x) => x)),
+        "emp_shift": List<dynamic>.from(empShift.map((x) => x.toJson())),
         "overtime": List<dynamic>.from(overtime.map((x) => x)),
       };
 }
@@ -92,7 +95,7 @@ class Attendance {
 
   String toRawJson() => json.encode(toJson());
 
-  factory Attendance.fromJson(Map<String, dynamic> json) => Attendance(
+  factory Attendance.fromJson(Map<String, String?> json) => Attendance(
         checkIn: json["checkIn"] ?? '',
         checkOut: json["checkOut"] ?? '',
         date: json["date"] ?? '',
@@ -106,5 +109,30 @@ class Attendance {
         "date": date,
         "shift": shift,
         "status": status,
+      };
+}
+
+class EmployeeShift {
+  EmployeeShift(
+      {required this.date, required this.shiftFrom, required this.shiftTo});
+
+  final String date;
+  final String shiftFrom;
+  final String shiftTo;
+
+  factory EmployeeShift.fromRawJson(String str) =>
+      EmployeeShift.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory EmployeeShift.fromJson(Map<String, String?> json) => EmployeeShift(
+      date: json["date"] ?? '',
+      shiftFrom: json["shiftFrom"] ?? '',
+      shiftTo: json["shiftTo"] ?? '');
+
+  Map<String, String> toJson() => {
+        "date": date,
+        "shiftFrom": shiftFrom,
+        "shiftTo": shiftTo,
       };
 }
