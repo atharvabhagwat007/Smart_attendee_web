@@ -42,7 +42,8 @@ class EmployeeModel {
 
   factory EmployeeModel.fromJson(Map<String, dynamic> json) => EmployeeModel(
       attendance: List<Attendance>.from(json["attendance"].map((x) {
-        return Attendance.fromJson(Map<String, String?>.from(x));
+        print(x);
+        return Attendance.fromJson(Map<String, dynamic>.from(x));
       })),
       clientId: json["client_id"] as String?,
       clientLocation: json["client_location"] as String?,
@@ -74,64 +75,67 @@ class EmployeeModel {
         "overtime": List<dynamic>.from(overtime.map((x) => x)),
       };
 
-   EmployeeModel copyWith(
+  EmployeeModel copyWith(
       {List<Attendance>? attendance,
-  String? clientId,
-  String? clientLocation,
-  String? clientName,
-  String? clientSublocation,
-  String? empId,
-  String? empMail,
-  String? empName,
-  String? empPhotourl,
-  String? empPwd,
-  List<EmployeeShift>? empShift,
-  List<dynamic>? overtime,
-  bool? isSelected}) {
+      String? clientId,
+      String? clientLocation,
+      String? clientName,
+      String? clientSublocation,
+      String? empId,
+      String? empMail,
+      String? empName,
+      String? empPhotourl,
+      String? empPwd,
+      List<EmployeeShift>? empShift,
+      List<dynamic>? overtime,
+      bool? isSelected}) {
     return EmployeeModel(
-       attendance: attendance ?? this.attendance,
-      clientId: clientId ?? this.clientId,
-      clientLocation: clientLocation ?? this.clientLocation,
-      clientName: clientName ?? this.clientName,
-      clientSublocation: clientSublocation ?? this.clientSublocation,
-      empId: empId ?? this.empId,
-      empMail: empMail ?? this.empMail,
-      empName: empName ?? this.empName,
-      empPhotourl: empPhotourl ?? this.empPhotourl,
-      empPwd: empPwd ?? this.empPwd,
-      empShift: empShift ?? this.empShift,
-      overtime: overtime ?? this.overtime,
-      isSelected: isSelected ?? this.isSelected);
+        attendance: attendance ?? this.attendance,
+        clientId: clientId ?? this.clientId,
+        clientLocation: clientLocation ?? this.clientLocation,
+        clientName: clientName ?? this.clientName,
+        clientSublocation: clientSublocation ?? this.clientSublocation,
+        empId: empId ?? this.empId,
+        empMail: empMail ?? this.empMail,
+        empName: empName ?? this.empName,
+        empPhotourl: empPhotourl ?? this.empPhotourl,
+        empPwd: empPwd ?? this.empPwd,
+        empShift: empShift ?? this.empShift,
+        overtime: overtime ?? this.overtime,
+        isSelected: isSelected ?? this.isSelected);
   }
 }
 
 class Attendance {
-  Attendance({
-    this.checkIn,
-    this.checkOut,
-    this.date,
-    this.shift,
-    this.status,
-  });
+  Attendance(
+      {this.checkIn,
+      this.checkOut,
+      this.date,
+      this.shift,
+      this.status,
+      this.overTime});
 
   final dynamic checkIn;
   final dynamic checkOut;
   final String? date;
   final String? shift;
   final dynamic status;
+  final OverTime? overTime;
 
   factory Attendance.fromRawJson(String str) =>
       Attendance.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory Attendance.fromJson(Map<String, String?> json) => Attendance(
-        checkIn: json["checkIn"] ?? '',
-        checkOut: json["checkOut"] ?? '',
-        date: json["date"] ?? '',
-        shift: json["shift"] ?? '',
-        status: json["status"] ?? '',
-      );
+  factory Attendance.fromJson(Map<String, dynamic> json) => Attendance(
+      checkIn: json["checkIn"] ?? '',
+      checkOut: json["checkOut"] ?? '',
+      date: json["date"] ?? '',
+      shift: json["shift"] ?? '',
+      status: json["status"] ?? '',
+      overTime: json["overtime"] != null
+          ? OverTime.fromJson(json["overtime"])
+          : null);
 
   Map<String, dynamic> toJson() => {
         "checkIn": checkIn,
@@ -139,7 +143,24 @@ class Attendance {
         "date": date,
         "shift": shift,
         "status": status,
+        "overtime": overTime?.toJson()
       };
+}
+
+class OverTime {
+  final int duration;
+  final String status;
+  OverTime({required this.duration, required this.status});
+
+  factory OverTime.fromRawJson(String str) =>
+      OverTime.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory OverTime.fromJson(Map<String, dynamic> json) =>
+      OverTime(duration: json['duration'], status: json['status']);
+
+  Map<String, dynamic> toJson() => {"duration": duration, "status": status};
 }
 
 class EmployeeShift {

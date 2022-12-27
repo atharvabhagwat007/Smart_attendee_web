@@ -34,81 +34,83 @@ class _AddShiftState extends State<AddShift> {
     return ChangeNotifierProvider(
       create: (context) => AddEmployeeShiftProvider(),
       builder: (context, child) => AlertDialog(
-          title: const Text('Shift'),
-          content: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: Column(
-                children: <Widget>[
-                  DatePicker(
-                      name: 'Date',
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Enter the Shift Date';
-                        }
-                      },
-                      onChanged: (text) {
-                        shiftDate = text;
-                      }),
-                  TimePicker(
-                    name: 'Shift From',
-                    onChanged: (text) {
-                      shiftFrom = text;
-                    },
+        title: const Text('Shift'),
+        content: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            child: Column(
+              children: <Widget>[
+                DatePicker(
+                    name: 'Date',
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Enter the Shift From Time';
+                        return 'Enter the Shift Date';
                       }
                     },
-                  ),
-                  TimePicker(
-                    name: 'Shift To',
                     onChanged: (text) {
-                      shiftTo = text;
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Enter the Shift To Time';
-                      }
-                    },
-                  )
-                ],
-              ),
+                      shiftDate = text;
+                    }),
+                TimePicker(
+                  name: 'Shift From',
+                  onChanged: (text) {
+                    shiftFrom = text;
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter the Shift From Time';
+                    }
+                  },
+                ),
+                TimePicker(
+                  name: 'Shift To',
+                  onChanged: (text) {
+                    shiftTo = text;
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter the Shift To Time';
+                    }
+                  },
+                )
+              ],
             ),
           ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              if (_formKey.currentState?.validate() ?? false) {
                 Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-                onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    Navigator.of(context).pop();
-                    final newShift = EmployeeShift(
-                        date: DateFormat('dd/MM/yyyy').format(shiftDate),
-                        shiftFrom: shiftFrom,
-                        shiftTo: shiftTo);
-                    context
-                        .read<AddEmployeeShiftProvider>()
-                        .addEmployeeShift(
-                          employeeId: widget.employeeId,
-                          employeeShift: newShift,
-                          context: context,
-                        )
-                        .then((value) {
-                      if (value) {
-                        context.pop();
-                      }
-                    });
+                final newShift = EmployeeShift(
+                    date: DateFormat('dd/MM/yyyy').format(shiftDate),
+                    shiftFrom: shiftFrom,
+                    shiftTo: shiftTo);
+                context
+                    .read<AddEmployeeShiftProvider>()
+                    .addEmployeeShift(
+                      employeeId: widget.employeeId,
+                      employeeShift: newShift,
+                      context: context,
+                    )
+                    .then((value) {
+                  if (value) {
                     widget.callback();
+                    context.pop();
                   }
-                },
-                child: const Text('Add')),
-          ]),
+                });
+              }
+            },
+            child: const Text('Add'),
+          ),
+        ],
+      ),
     );
   }
 }
