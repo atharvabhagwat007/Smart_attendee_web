@@ -73,6 +73,36 @@ class EmployeeModel {
         "emp_shift": List<dynamic>.from(empShift.map((x) => x.toJson())),
         "overtime": List<dynamic>.from(overtime.map((x) => x)),
       };
+
+   EmployeeModel copyWith(
+      {List<Attendance>? attendance,
+  String? clientId,
+  String? clientLocation,
+  String? clientName,
+  String? clientSublocation,
+  String? empId,
+  String? empMail,
+  String? empName,
+  String? empPhotourl,
+  String? empPwd,
+  List<EmployeeShift>? empShift,
+  List<dynamic>? overtime,
+  bool? isSelected}) {
+    return EmployeeModel(
+       attendance: attendance ?? this.attendance,
+      clientId: clientId ?? this.clientId,
+      clientLocation: clientLocation ?? this.clientLocation,
+      clientName: clientName ?? this.clientName,
+      clientSublocation: clientSublocation ?? this.clientSublocation,
+      empId: empId ?? this.empId,
+      empMail: empMail ?? this.empMail,
+      empName: empName ?? this.empName,
+      empPhotourl: empPhotourl ?? this.empPhotourl,
+      empPwd: empPwd ?? this.empPwd,
+      empShift: empShift ?? this.empShift,
+      overtime: overtime ?? this.overtime,
+      isSelected: isSelected ?? this.isSelected);
+  }
 }
 
 class Attendance {

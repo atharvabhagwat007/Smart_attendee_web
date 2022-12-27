@@ -1,7 +1,9 @@
 class RouterPaths {
-  static const home = 'home', login = 'login', dashboard = 'dashboard';
+  static const home = 'home', login = 'login', dashboard = 'dashboard', editEmployee = 'editEmployee', addShift = 'addShift';
 
   static const homePath = '/',
       loginPath = '/login',
-      dashboardPath = '/dashboard';
+      dashboardPath = '/dashboard',
+      addShiftPath = 'shift',
+      editEmployeePath = 'edit';
 }
