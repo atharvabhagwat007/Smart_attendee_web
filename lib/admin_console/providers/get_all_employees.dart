@@ -7,7 +7,7 @@ class GetAllEmployeeProvider with ChangeNotifier {
   int employeeCount = 0;
   bool isEmployeeLoaded = false;
   getAllEmployees({String adminId = "tTG47D04arQ3tdlq8MY5"}) async {
-//    try {
+    try {
     Response response =
         await Dio().get("http://100.24.5.134:8000/allEmps/$adminId");
     if (response.statusCode == 200) {
@@ -18,8 +18,8 @@ class GetAllEmployeeProvider with ChangeNotifier {
 
       notifyListeners();
     }
-    // } catch (e) {
-    //   print(e);
-    // }
+    } catch (e) {
+      print(e);
+    }
   }
 }

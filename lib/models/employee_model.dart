@@ -17,7 +17,6 @@ class EmployeeModel {
     required this.empName,
     required this.empPhotourl,
     required this.empPwd,
-    required this.empShift,
     required this.overtime,
   });
 
@@ -31,7 +30,6 @@ class EmployeeModel {
   final String empName;
   final String empPhotourl;
   final String empPwd;
-  final List<EmployeeShift> empShift;
   final List<dynamic> overtime;
   bool isSelected = false;
 
@@ -53,9 +51,6 @@ class EmployeeModel {
       empName: json["emp_name"] as String,
       empPhotourl: json["emp_photourl"] as String,
       empPwd: json["emp_pwd"] as String,
-      empShift: List<EmployeeShift>.from(json["emp_shift"].map((x) {
-        return EmployeeShift.fromJson(Map<String, String?>.from(x));
-      })),
       overtime: List<dynamic>.from(json["overtime"].map((x) => x)),
       isSelected: false);
 
@@ -70,7 +65,6 @@ class EmployeeModel {
         "emp_name": empName,
         "emp_photourl": empPhotourl,
         "emp_pwd": empPwd,
-        "emp_shift": List<dynamic>.from(empShift.map((x) => x.toJson())),
         "overtime": List<dynamic>.from(overtime.map((x) => x)),
       };
 
@@ -85,7 +79,6 @@ class EmployeeModel {
       String? empName,
       String? empPhotourl,
       String? empPwd,
-      List<EmployeeShift>? empShift,
       List<dynamic>? overtime,
       bool? isSelected}) {
     return EmployeeModel(
@@ -99,7 +92,6 @@ class EmployeeModel {
         empName: empName ?? this.empName,
         empPhotourl: empPhotourl ?? this.empPhotourl,
         empPwd: empPwd ?? this.empPwd,
-        empShift: empShift ?? this.empShift,
         overtime: overtime ?? this.overtime,
         isSelected: isSelected ?? this.isSelected);
   }
@@ -110,14 +102,16 @@ class Attendance {
       {this.checkIn,
       this.checkOut,
       this.date,
-      this.shift,
+      this.shiftFrom,
+      this.shiftTo,
       this.status,
       this.overTime});
 
   final dynamic checkIn;
   final dynamic checkOut;
   final String? date;
-  final String? shift;
+  final String? shiftFrom;
+  final String? shiftTo;
   final dynamic status;
   final OverTime? overTime;
 
@@ -130,7 +124,8 @@ class Attendance {
       checkIn: json["checkIn"] ?? '',
       checkOut: json["checkOut"] ?? '',
       date: json["date"] ?? '',
-      shift: json["shift"] ?? '',
+      shiftFrom: json["shiftFrom"] ?? '',
+      shiftTo: json["shiftTo"] ?? '',
       status: json["status"] ?? '',
       overTime: json["overtime"] != null
           ? OverTime.fromJson(json["overtime"])
@@ -140,7 +135,8 @@ class Attendance {
         "checkIn": checkIn,
         "checkOut": checkOut,
         "date": date,
-        "shift": shift,
+        "shiftFrom": shiftFrom,
+        "shiftTo":shiftTo,
         "status": status,
         "overtime": overTime?.toJson()
       };

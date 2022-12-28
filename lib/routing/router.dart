@@ -44,14 +44,8 @@ class WebRouter {
               name: RouterPaths.editEmployee,
               path: '${RouterPaths.editEmployeePath}/:empId',
               builder: (context, state) =>
-                  EditEmployeeScreen(employee: state.extra! as EmployeeModel),
+                  EditEmployeeScreen(employeeId: state.params['empId']!),
             ),
-            GoRoute(
-              name: RouterPaths.addShift,
-              path: '${RouterPaths.editEmployeePath}/:empId/${RouterPaths.addShiftPath}',
-              builder: (context, state) =>
-                  AddShift(employeeId: state.params['empId']!, callback: state.extra! as Function),
-            )
           ])
     ],
     redirect: (context, state) {

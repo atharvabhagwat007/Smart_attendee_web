@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_attendee/admin_console/providers/add_client_provider.dart';
@@ -53,45 +54,14 @@ class _AddClientScreenState extends State<AddClientScreen> {
                 const SizedBox(
                   height: 30,
                 ),
-                Consumer<AddClientProvider>(
-                  builder: (context, value, child) => InkWell(
-                    onTap: () {
-                      if (_clientIdController.text.isEmpty ||
-                          _clientLocationController.text.isEmpty ||
-                          _clientNameController.text.isEmpty ||
-                          _clientSubLocationController.text.isEmpty ||
-                          value.selectedEmployee.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: SizedBox(
-                              height: 20,
-                              child: Center(
-                                  child: Text("Please enter all fields")),
-                            ),
-                          ),
-                        );
-                      } else {
-                        value.addClient(
-                            context: context,
-                            adminId: "",
-                            clientCity: _clientSubLocationController.text,
-                            clientCountry: _clientLocationController.text,
-                            clientId: _clientIdController.text,
-                            clientName: _clientNameController.text,
-                            employeeList: [] //TODO ADDING LIST FROM PROVIDER
-                            ).then((value) {
-                          if (value == "true") {
-                            // Navigator.pop(context);
-                            print("added");
-                          }
-                        });
-                      }
-                    },
-                    child: SubmitButton(
-                      title: "Submit",
-                    ),
+                InkWell(
+                  onTap: () async {
+                    _validatingAndAddingClient();
+                  },
+                  child: SubmitButton(
+                    title: "Submit",
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -100,7 +70,56 @@ class _AddClientScreenState extends State<AddClientScreen> {
     );
   }
 
-  _getLocationForms() {
+  _validatingAndAddingClient() {
+    if (_clientIdController.text.isEmpty ||
+        _clientLocationController.text.isEmpty ||
+        _clientNameController.text.isEmpty ||
+        _clientSubLocationController.text.isEmpty ||
+        Provider.of<AddClientProvider>(context, listen: false)
+            .selectedEmployee
+            .isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: SizedBox(
+            height: 20,
+            child: Center(
+              child: Text("Please enter all fields"),
+            ),
+          ),
+        ),
+      );
+    } else {
+      Provider.of<AddClientProvider>(context, listen: false)
+          .addClient(
+              context: context,
+              adminId: "tTG47D04arQ3tdlq8MY5", //TODO KEPT IT HARDCODED
+              clientCity: _clientSubLocationController.text,
+              clientCountry: _clientLocationController.text,
+              clientId: _clientIdController.text,
+              clientName: _clientNameController.text,
+              employeeList:
+                  Provider.of<AddClientProvider>(context, listen: false)
+                      .selectedEmployee)
+          .then((value) {
+        if (value == "true") {
+          // Navigator.pop(context);
+          _clearingData();
+          print("added");
+        }
+      });
+    }
+  }
+
+  _clearingData() {
+    _clientIdController.clear();
+    _clientLocationController.clear();
+    _clientNameController.clear();
+    _clientSubLocationController.clear();
+    Provider.of<AddClientProvider>(context, listen: false).selectedEmployee =
+        [];
+  }
+
+  Widget _getLocationForms() {
     return Row(
       children: [
         Expanded(
@@ -175,9 +194,12 @@ class _AddClientScreenState extends State<AddClientScreen> {
       child: Container(
         decoration: BoxDecoration(
             border: Border.all(), borderRadius: BorderRadius.circular(8)),
-        child: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Text("Add Employees"),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child:
+              Provider.of<AddClientProvider>(context).selectedEmployee.isEmpty
+                  ? Text("Add Employees")
+                  : Text("Employees Added"),
         ),
       ),
     );
@@ -197,36 +219,52 @@ class _AddClientScreenState extends State<AddClientScreen> {
                       flex: 3,
                       child: Padding(
                         padding: const EdgeInsets.all(10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Material(
-                              child: Padding(
-                                padding: EdgeInsets.all(30.0),
-                                child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                    "Select from the following employees",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Provider.of<GetAllEmployeeProvider>(context)
-                                    .isEmployeeLoaded
-                                ? _getAllEmployeesList(value)
-                                : const Material(
-                                    child: Center(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(30.0),
-                                        child: CircularProgressIndicator(),
+                        child: Material(
+                          child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Material(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(15.0),
+                                    child: Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        "Select from the following employees",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600),
                                       ),
                                     ),
                                   ),
-                          ],
+                                ),
+                                Provider.of<GetAllEmployeeProvider>(context)
+                                        .isEmployeeLoaded
+                                    ? _getAllEmployeesList(value)
+                                    : const Material(
+                                        child: Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(30.0),
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        ),
+                                      ),
+                                Material(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(50.0),
+                                    child: ElevatedButton(
+                                      child: const Text("Done"),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -239,6 +277,7 @@ class _AddClientScreenState extends State<AddClientScreen> {
   _getAllEmployeesList(value) {
     return Expanded(
       child: ListView.builder(
+        padding: EdgeInsets.zero,
         shrinkWrap: true,
         itemCount: Provider.of<GetAllEmployeeProvider>(context).employeeCount,
         itemBuilder: (context, index) {

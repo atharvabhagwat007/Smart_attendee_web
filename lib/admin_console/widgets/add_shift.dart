@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_attendee/admin_console/widgets/time_picker.dart';
@@ -25,11 +24,6 @@ class _AddShiftState extends State<AddShift> {
   late String shiftTo;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => AddEmployeeShiftProvider(),
@@ -47,6 +41,7 @@ class _AddShiftState extends State<AddShift> {
                       if (value == null || value.isEmpty) {
                         return 'Enter the Shift Date';
                       }
+                      return null;
                     },
                     onChanged: (text) {
                       shiftDate = text;
@@ -60,6 +55,7 @@ class _AddShiftState extends State<AddShift> {
                     if (value == null || value.isEmpty) {
                       return 'Enter the Shift From Time';
                     }
+                    return null;
                   },
                 ),
                 TimePicker(
@@ -71,6 +67,7 @@ class _AddShiftState extends State<AddShift> {
                     if (value == null || value.isEmpty) {
                       return 'Enter the Shift To Time';
                     }
+                    return null;
                   },
                 )
               ],
@@ -101,7 +98,7 @@ class _AddShiftState extends State<AddShift> {
                     .then((value) {
                   if (value) {
                     widget.callback();
-                    context.pop();
+                    Navigator.of(context).pop();
                   }
                 });
               }

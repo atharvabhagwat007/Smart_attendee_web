@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:smart_attendee/models/employee_model.dart';
 
 class AddClientProvider with ChangeNotifier {
-  List<EmployeeModel> selectedEmployee = [];
+  List<String> selectedEmployee = [];
 
   void selectEmployee(EmployeeModel currentEmployee) {
     if (currentEmployee.isSelected) {
-      selectedEmployee.remove(currentEmployee);
+      selectedEmployee.remove(currentEmployee.empId.toString());
       notifyListeners();
     } else {
-      selectedEmployee.add(currentEmployee);
+      selectedEmployee.add(currentEmployee.empId.toString());
       notifyListeners();
     }
     print(selectedEmployee);

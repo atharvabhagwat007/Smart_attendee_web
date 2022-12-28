@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_attendee/admin_console/providers/get_all_clients.dart';
+import 'package:smart_attendee/admin_console/widgets/drop_down.dart';
+import 'package:smart_attendee/models/employee_model.dart';
 import 'package:smart_attendee/routing/routes.dart';
 
+import '../models/client_model.dart';
 import 'providers/get_all_employees.dart';
 
 class AddEmployeeShift extends StatefulWidget {
@@ -14,6 +17,19 @@ class AddEmployeeShift extends StatefulWidget {
 }
 
 class _AddEmployeeShiftState extends State<AddEmployeeShift> {
+  String? selectedClient;
+  List<EmployeeModel>? filteredList;
+
+  void clientSelected(String? value, List<EmployeeModel> employees) {
+    selectedClient = value;
+    if (selectedClient != null) {
+      filteredList = employees
+          .where((element) => element.clientName == selectedClient)
+          .toList();
+    }
+    setState(() {});
+  }
+
   @override
   void initState() {
     context.read<GetAllEmployeeProvider>().getAllEmployees();
@@ -59,52 +75,39 @@ class _AddEmployeeShiftState extends State<AddEmployeeShift> {
                 ),
               ],
             ),
-            Row(
-              children: [
-                const Spacer(),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  ),
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextButton(
-                    onPressed: () {},
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          'no client selected',
-                          style: Theme.of(context).textTheme.button,
-                        ),
-                        const Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.black,
-                        )
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ),
+            filterSection(
+                clients: clientList,
+                context: context,
+                onChanged: (value) {
+                  clientSelected(value, employeeList);
+                },
+                selectedClient: selectedClient),
             const SizedBox(
               height: 12,
             ),
             Expanded(
               child: ListView.separated(
-                itemCount: employeeList.length,
+                itemCount: selectedClient == null
+                    ? employeeList.length
+                    : filteredList!.length,
                 separatorBuilder: (context, index) => const SizedBox(
                   height: 4,
                 ),
                 itemBuilder: (context, index) {
-                  final e = employeeList[index];
+                  EmployeeModel employee;
+                  if (selectedClient == null) {
+                    employee = employeeList[index];
+                  } else {
+                    employee = filteredList![index];
+                  }
                   return Card(
                     child: ListTile(
                       trailing: InkWell(
                           onTap: () {
-                            context.goNamed(RouterPaths.editEmployee,
-                                params: {'empId': e.empId, 'tab': 'add_shift'},
-                                extra: e);
+                            context.goNamed(RouterPaths.editEmployee, params: {
+                              'empId': employee.empId,
+                              'tab': 'add_shift'
+                            });
                           },
                           child: const Text(
                             "Edit",
@@ -120,16 +123,16 @@ class _AddEmployeeShiftState extends State<AddEmployeeShift> {
                                 errorBuilder: (context, error, stackTrace) =>
                                     Image.asset(
                                         "assets/images/profile_image.png"),
-                                e.empPhotourl)
+                                employee.empPhotourl)
                             .image,
                       ),
                       title: Text(
-                        e.empName,
+                        employee.empName,
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                       subtitle: Text(
-                        e.empMail,
+                        employee.empMail,
                         style: const TextStyle(fontSize: 14),
                       ),
                     ),
@@ -141,5 +144,30 @@ class _AddEmployeeShiftState extends State<AddEmployeeShift> {
         ),
       );
     });
+  }
+
+  Widget filterSection(
+      {required BuildContext context,
+      required Function(String?) onChanged,
+      required List<Client> clients,
+      required String? selectedClient}) {
+    final clientNames = clients.map((client) => client.name).toList();
+    return Row(
+      children: [
+        const Spacer(),
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+          ),
+          padding: const EdgeInsets.all(8.0),
+          child: DropDown(
+              hint: 'Select Client',
+              dropdownItems: clientNames,
+              onChanged: onChanged,
+              value: selectedClient),
+        )
+      ],
+    );
   }
 }
