@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_attendee/admin_console/providers/add_client_provider.dart';
+import 'package:smart_attendee/admin_console/providers/get_all_clients.dart';
 import 'package:smart_attendee/admin_console/providers/get_all_employees.dart';
 import 'package:smart_attendee/auth/provider/auth_provider.dart';
 
@@ -39,6 +40,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<GetAllEmployeeProvider>(
           create: (BuildContext createContext) => GetAllEmployeeProvider(),
+        ),
+        ChangeNotifierProvider<GetAllClientProvider>(
+          create: (BuildContext createContext) => GetAllClientProvider(),
         ),
         Provider<WebRouter>(
           lazy: false,

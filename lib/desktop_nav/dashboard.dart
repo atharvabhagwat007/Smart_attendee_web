@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smart_attendee/admin_console/add_client_screen.dart';
+import 'package:smart_attendee/admin_console/add_employee_shift.dart';
 import 'package:smart_attendee/admin_console/admin_console.dart.dart';
 import 'package:smart_attendee/desktop_nav/models/nav_option.dart';
 import 'package:smart_attendee/routing/routes.dart';
@@ -58,7 +59,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     } else if (index == 2) {
       _tabBody = const AddEmployeeScreen();
     } else if (index == 3) {
-      _tabBody = const SizedBox();
+      _tabBody = const AddEmployeeShift();
     } else if (index == 4) {
       _tabBody = const SizedBox();
     } else {
