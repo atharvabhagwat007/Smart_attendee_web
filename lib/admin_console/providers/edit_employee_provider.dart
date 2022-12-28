@@ -1,9 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_attendee/models/employee_model.dart';
 
 class EditEmployeeProvider with ChangeNotifier {
-  Future<bool> addEmployeeShift(
+  Future<bool> editEmployee(
       {required String employeeId,
       required Map<String, dynamic> json,
       required BuildContext context}) async {

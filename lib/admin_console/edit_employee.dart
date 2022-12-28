@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_attendee/admin_console/providers/edit_employee_provider.dart';
 import 'package:smart_attendee/admin_console/widgets/custom_text_field.dart';
 import 'package:smart_attendee/admin_console/widgets/submit_button.dart';
 import 'package:smart_attendee/models/employee_model.dart';
@@ -29,6 +30,9 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
   late List<Attendance> employeeShift;
   @override
   void initState() {
+    context
+        .read<GetEmployeeProvider>()
+        .getEmployee(employeeId: widget.employeeId);
     super.initState();
   }
 
@@ -72,131 +76,177 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
     employeeEmailController.text = employee.empMail;
     employeePasswordController.text = employee.empPwd;
     employeeShift = employee.attendance;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: InkWell(
-            onTap: () async {
-              _pickImage();
-            },
-            child: CircleAvatar(
-              backgroundColor: Colors.black,
-              radius: 50,
-              backgroundImage: file.path == "zz"
-                  ? Image.network(
-                      employee.empPhotourl,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Icon(Icons.error),
-                    ).image
-                  : Image.memory(webImage).image,
-            ),
-          ),
-        ),
-        const SizedBox(
-          height: 5,
-        ),
-        const Text(
-          "Edit Employee Photo",
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(
-          height: 30,
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: CustomTextField(
-                labelText: "Name",
-                textEditingController: employeeNameController,
-                title: "Employee Name",
+    return ChangeNotifierProvider(
+      create: (context) => EditEmployeeProvider(),
+      builder: (context, child) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: InkWell(
+              onTap: () async {
+                _pickImage();
+              },
+              child: CircleAvatar(
+                backgroundColor: Colors.black,
+                radius: 50,
+                backgroundImage: file.path == "zz"
+                    ? Image.network(
+                        employee.empPhotourl,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.error),
+                      ).image
+                    : Image.memory(webImage).image,
               ),
             ),
-            const SizedBox(
-              width: 20,
-            ),
-            Expanded(
-              child: CustomTextField(
-                labelText: "Email",
-                textEditingController: employeeEmailController,
-                title: "Employee Email",
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 30,
-        ),
-        CustomTextField(
-          width: MediaQuery.of(context).size.width / 2.5,
-          labelText: "Password",
-          textEditingController: employeePasswordController,
-          title: "Employee Password",
-        ),
-        const SizedBox(
-          height: 30,
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          child: Text(
-            'Shifts',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
-        ),
-        Expanded(
-            child: employeeShift.isNotEmpty
-                ? SizedBox(
-                    width: 450,
-                    child: ListView.separated(
-                        itemBuilder: (context, index) {
-                          final shift = employeeShift[index];
-                          return shiftCard(shift, index);
-                        },
-                        separatorBuilder: (context, index) => const SizedBox(
-                              height: 8,
-                            ),
-                        itemCount: employeeShift.length),
-                  )
-                : const Center(
-                    child: Text('No Shift Added'),
-                  )),
-        Row(
-          children: [
-            TextButton(
-                onPressed: () {
-                  showDialog<Widget>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AddShift(
-                            employeeId: employee.empId,
-                            callback: () {
-                              setState(() {
-                                context
-                                    .read<GetEmployeeProvider>()
-                                    .getEmployee(employeeId: widget.employeeId);
+          const SizedBox(
+            height: 5,
+          ),
+          const Text(
+            "Edit Employee Photo",
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: CustomTextField(
+                  labelText: "Name",
+                  textEditingController: employeeNameController,
+                  title: "Employee Name",
+                ),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Expanded(
+                child: CustomTextField(
+                  labelText: "Email",
+                  textEditingController: employeeEmailController,
+                  title: "Employee Email",
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          CustomTextField(
+            width: MediaQuery.of(context).size.width / 2.5,
+            labelText: "Password",
+            textEditingController: employeePasswordController,
+            title: "Employee Password",
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: Text(
+              'Shifts',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
+          ),
+          Expanded(
+              child: employeeShift.isNotEmpty
+                  ? SizedBox(
+                      width: 450,
+                      child: ListView.separated(
+                          itemBuilder: (context, index) {
+                            final shift = employeeShift[index];
+                            return shiftCard(context, shift, index);
+                          },
+                          separatorBuilder: (context, index) => const SizedBox(
+                                height: 8,
+                              ),
+                          itemCount: employeeShift.length),
+                    )
+                  : const Center(
+                      child: Text('No Shift Added'),
+                    )),
+          Row(
+            children: [
+              TextButton(
+                  onPressed: () {
+                    showDialog<Widget>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AddShift(
+                              employeeId: employee.empId,
+                              callback: () {
+                                setState(() {
+                                  context
+                                      .read<GetEmployeeProvider>()
+                                      .getEmployee(
+                                          employeeId: widget.employeeId);
+                                });
                               });
+                        });
+                  },
+                  child: SubmitButton(title: "Add Shift")),
+              const Spacer(),
+              TextButton(
+                  onPressed: () {
+                    final employeeName = employeeNameController.text;
+                    final employeeMail = employeeEmailController.text;
+                    final employeePassword = employeePasswordController.text;
+                    if (employeeName.isNotEmpty &&
+                        employeeMail.isNotEmpty &&
+                        employeePassword.isNotEmpty) {
+                      context
+                          .read<EditEmployeeProvider>()
+                          .editEmployee(
+                            employeeId: widget.employeeId,
+                            json: {
+                              "emp_name": employeeNameController.text,
+                              "emp_mail": employeeEmailController.text,
+                              "emp_pwd": employeePasswordController.text,
+                            },
+                            context: context,
+                          )
+                          .then((value) {
+                        if (value) {
+                          if (value) {
+                            setState(() {
+                              context
+                                  .read<GetEmployeeProvider>()
+                                  .getEmployee(employeeId: widget.employeeId);
                             });
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: SizedBox(
+                                  height: 20,
+                                  child: Text('Succesfully Update the User'),
+                                ),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: SizedBox(
+                                  height: 20,
+                                  child: Text(
+                                      'Some Error occured. Please try again'),
+                                ),
+                              ),
+                            );
+                          }
+                        }
                       });
-                },
-                child: SubmitButton(title: "Add Shift")),
-            const Spacer(),
-            TextButton(
-                onPressed: () {
-                  final newEmployee = employee.copyWith(
-                    empName: employeeNameController.text,
-                    empMail: employeeEmailController.text,
-                    empPwd: employeePasswordController.text
-                  );
-                },
-                child: SubmitButton(title: "Update Changes")),
-          ],
-        ),
-      ],
+                    }
+                  },
+                  child: SubmitButton(title: "Update Changes")),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
-  Widget shiftCard(Attendance shift, int index) {
+  Widget shiftCard(BuildContext context, Attendance shift, int index) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -236,15 +286,52 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
             ),
             const Spacer(),
             IconButton(
-                onPressed: () {
-                  setState(() {
-                    employeeShift.removeAt(index);
-                  });
-                },
-                icon: const Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                ))
+              onPressed: () {
+                employeeShift.removeAt(index);
+                context
+                    .read<EditEmployeeProvider>()
+                    .editEmployee(
+                      employeeId: widget.employeeId,
+                      json: {
+                        "attendance": List<dynamic>.from(
+                            employeeShift.map((x) => x.toJson()))
+                      },
+                      context: context,
+                    )
+                    .then((value) {
+                  if (value) {
+                    if (value) {
+                      setState(() {
+                        context
+                            .read<GetEmployeeProvider>()
+                            .getEmployee(employeeId: widget.employeeId);
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: SizedBox(
+                            height: 20,
+                            child: Text('Succesfully Update the User'),
+                          ),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: SizedBox(
+                            height: 20,
+                            child: Text('Some Error occured. Please try again'),
+                          ),
+                        ),
+                      );
+                    }
+                  }
+                });
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
+            ),
           ],
         ),
       ),
