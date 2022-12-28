@@ -181,21 +181,36 @@ class _AdminConsoleState extends State<AdminConsole> {
   Widget _getCountOfEmployeeClientContainer() {
     return Row(
       children: [
-        _getCountsContainer("Total Employees ",
-            "${Provider.of<GetAllEmployeeProvider>(context).employeeCount}"),
+        _getCountsContainer(
+          "Total Employees ",
+          "${Provider.of<GetAllEmployeeProvider>(context).employeeCount}",
+        ),
         const SizedBox(
           width: 20,
         ),
-        _getCountsContainer("Total Clients",
-            "${Provider.of<GetAllClientProvider>(context, listen: false).clientList.length}"),
+        Provider.of<GetAllClientProvider>(context).isClientLoaded
+            ? _getCountsContainer(
+                "Total Clients",
+                "${Provider.of<GetAllClientProvider>(context, listen: false).clientList.length}",
+              )
+            : _getCountsContainer(
+                "Total Clients",
+                "Loading...",
+              ),
         const SizedBox(
           width: 20,
         ),
-        _getCountsContainer("Average attendece ", "30"),
+        _getCountsContainer(
+          "Average attendece ",
+          "30",
+        ),
         const SizedBox(
           width: 20,
         ),
-        _getCountsContainer("Average overtime ", "20"),
+        _getCountsContainer(
+          "Average overtime ",
+          "20",
+        ),
       ],
     );
   }
@@ -243,17 +258,13 @@ class _AdminConsoleState extends State<AdminConsole> {
                   const SizedBox(
                     height: 5,
                   ),
-                  Provider.of<GetAllClientProvider>(context).isClientLoaded
-                      ? Text(
-                          count,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      : const Center(
-                          child: CircularProgressIndicator(),
-                        )
+                  Text(
+                    count,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
                 ],
               ),
             ),
