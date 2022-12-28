@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
-import 'package:smart_attendee/admin_console/providers/get_all_clients.dart';
-import 'package:smart_attendee/admin_console/providers/get_all_employees.dart';
+
+import 'providers/get_all_employees.dart';
+import 'providers/get_all_clients.dart';
 
 class AdminConsole extends StatefulWidget {
   const AdminConsole({super.key});
@@ -16,215 +16,193 @@ class _AdminConsoleState extends State<AdminConsole> {
   void initState() {
     context.read<GetAllEmployeeProvider>().getAllEmployees();
     context.read<GetAllClientProvider>().getAllClients();
+    context.read<GetAllClientProvider>().getAllClients();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (Provider.of<GetAllEmployeeProvider>(context)
-                .isEmployeeLoaded) ...[
-              _getGreetingText(),
-              _getCountOfEmployeeClientContainer(),
-              const SizedBox(
-                height: 40,
-              ),
-              ..._getAllEmployees(),
-              ..._getAllClients(),
-            ],
-            if (Provider.of<GetAllEmployeeProvider>(context).isEmployeeLoaded ==
-                false)
-              const Center(
-                child: CircularProgressIndicator(),
-              ),
-          ],
-        ),
-      ),
-    ));
-  }
-
-  List _getAllEmployees() {
-    return [
-      _getTitle("All employees"),
-      const SizedBox(
-        height: 15,
-      ),
-      Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.shade400,
-              blurRadius: 5,
-            )
-          ],
-          border: Border.all(color: Colors.transparent),
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            children: Provider.of<GetAllEmployeeProvider>(context)
-                .employeeList
-                .map((e) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: SizedBox(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      const Divider(
-                        thickness: 2,
-                      ),
-                      ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.black,
-                          radius: 30,
-                          backgroundImage: Image.network(
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Image.asset(
-                                          "assets/images/profile_image.png"),
-                                  e.empPhotourl)
-                              .image,
-                        ),
-                        title: Text(
-                          e.empName,
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
-                        subtitle: Text(
-                          e.empMail,
-                          style: const TextStyle(fontSize: 14),
+        body: (Provider.of<GetAllEmployeeProvider>(context).isEmployeeLoaded) &&
+                (Provider.of<GetAllClientProvider>(context).isClientLoaded)
+            ? Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (Provider.of<GetAllEmployeeProvider>(context)
+                        .isEmployeeLoaded)
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 40.0),
+                        child: Text(
+                          "Good Morning ",
+                          style: TextStyle(
+                            fontSize: 38,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
-                    ],
-                  ),
+                    Row(
+                      children: [
+                        _getCountsContainer("Total Employees ",
+                            "${Provider.of<GetAllEmployeeProvider>(context).employeeCount}"),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        _getCountsContainer("Total Clients",
+                            "${Provider.of<GetAllClientProvider>(context).clientCount}"),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            "Employees",
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            "Clients",
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: employeeListView(context),
+                          ),
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                            child: clientListView(context),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              );
-            }).toList(),
-          ),
-        ),
-      )
-    ];
-  }
-
-  Widget _getTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Text(
-        title,
-        style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
-      ),
-    );
-  }
-
-  List _getAllClients() {
-    return [
-      _getTitle("All Clients"),
-      const SizedBox(
-        height: 15,
-      ),
-      Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.shade400,
-              blurRadius: 5,
-            )
-          ],
-          border: Border.all(color: Colors.transparent),
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            children:
-                Provider.of<GetAllClientProvider>(context).clientList.map((e) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: SizedBox(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      const Divider(
-                        thickness: 2,
-                      ),
-                      ListTile(
-                        title: Text(
-                          e.name,
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
-                        subtitle: Text(
-                          e.location,
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      )
-    ];
-  }
-
-  Widget _getCountOfEmployeeClientContainer() {
-    return Row(
-      children: [
-        _getCountsContainer(
-          "Total Employees ",
-          "${Provider.of<GetAllEmployeeProvider>(context).employeeCount}",
-        ),
-        const SizedBox(
-          width: 20,
-        ),
-        Provider.of<GetAllClientProvider>(context).isClientLoaded
-            ? _getCountsContainer(
-                "Total Clients",
-                "${Provider.of<GetAllClientProvider>(context, listen: false).clientList.length}",
               )
-            : _getCountsContainer(
-                "Total Clients",
-                "Loading...",
+            : reloadView());
+  }
+
+  Widget employeeListView(BuildContext context) {
+    final employeeList =
+        Provider.of<GetAllEmployeeProvider>(context).employeeList;
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade400,
+            blurRadius: 5,
+          )
+        ],
+        border: Border.all(color: Colors.transparent),
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: ListView.separated(
+          itemCount: employeeList.length,
+          separatorBuilder: (context, index) => const SizedBox(
+            height: 4,
+          ),
+          itemBuilder: (context, index) {
+            var employee = employeeList[index];
+            return Card(
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.black,
+                  radius: 30,
+                  backgroundImage: Image.network(
+                          errorBuilder: (context, error, stackTrace) =>
+                              Image.asset("assets/images/profile_image.png"),
+                          employee.empPhotourl)
+                      .image,
+                ),
+                title: Text(
+                  employee.empName,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                subtitle: Text(
+                  employee.empMail,
+                  style: const TextStyle(fontSize: 14),
+                ),
               ),
-        const SizedBox(
-          width: 20,
+            );
+          },
         ),
-        _getCountsContainer(
-          "Average attendece ",
-          "30",
-        ),
-        const SizedBox(
-          width: 20,
-        ),
-        _getCountsContainer(
-          "Average overtime ",
-          "20",
-        ),
-      ],
+      ),
     );
   }
 
-  Widget _getGreetingText() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(vertical: 40.0),
-      child: Text(
-        "Good Morning ",
-        style: TextStyle(
-          fontSize: 38,
-          fontWeight: FontWeight.w600,
+  Widget clientListView(BuildContext context) {
+    final clientList = Provider.of<GetAllClientProvider>(context).clientList;
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade400,
+            blurRadius: 5,
+          )
+        ],
+        border: Border.all(color: Colors.transparent),
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: ListView.separated(
+          itemCount: clientList.length,
+          separatorBuilder: (context, index) => const SizedBox(
+            height: 4,
+          ),
+          itemBuilder: (context, index) {
+            var client = clientList[index];
+
+            return Card(
+              child: ListTile(
+                leading: const CircleAvatar(
+                  backgroundColor: Colors.blueGrey,
+                  radius: 30,
+                ),
+                title: Text(
+                  client.name,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                subtitle: Text(
+                  '${client.subLocation} ${client.location}',
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ),
+            );
+          },
         ),
       ),
+    );
+  }
+
+  Center reloadView() {
+    return const Center(
+      child: CircularProgressIndicator(),
     );
   }
 

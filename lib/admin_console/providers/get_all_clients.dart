@@ -4,7 +4,7 @@ import 'package:smart_attendee/models/client_model.dart';
 
 class GetAllClientProvider with ChangeNotifier {
   List<Client> clientList = [];
-  int employeeCount = 0;
+  int clientCount = 0;
   bool isClientLoaded = false;
   getAllClients({String adminId = "tTG47D04arQ3tdlq8MY5"}) async {
 //    try {
@@ -13,7 +13,7 @@ class GetAllClientProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       List dataList = response.data['client_datas'];
       clientList = dataList.map((e) => Client.fromJson(e)).toList();
-      employeeCount = clientList.length;
+      clientCount = clientList.length;
       isClientLoaded = true;
 
       notifyListeners();
