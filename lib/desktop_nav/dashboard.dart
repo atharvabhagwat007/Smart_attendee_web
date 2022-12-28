@@ -139,7 +139,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                         ],
                         extended: true,
                         labelType: NavigationRailLabelType.none,
-                        selectedIndex: 0,
+                        selectedIndex: _selectedIndex,
                         onDestinationSelected: _onDestinationSelected,
                       ),
                     ),
