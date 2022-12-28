@@ -4,7 +4,7 @@ import 'package:smart_attendee/models/employee_model.dart';
 
 class AddClientProvider with ChangeNotifier {
   List<String> selectedEmployee = [];
-  bool isClientAdded = false;
+  bool isClientAdded = true;
 
   void selectEmployee(EmployeeModel currentEmployee) {
     if (currentEmployee.isSelected) {
@@ -26,6 +26,8 @@ class AddClientProvider with ChangeNotifier {
     required String clientCity,
     required BuildContext context,
   }) async {
+    isClientAdded = false;
+    notifyListeners();
     try {
       Response res =
           await Dio().post("http://100.24.5.134:8000/addClient", data: {
