@@ -4,13 +4,12 @@ import 'package:smart_attendee/models/employee_model.dart';
 
 class AddEmployeeShiftProvider with ChangeNotifier {
   Future<bool> addEmployeeShift(
-      {
-        required String employeeId,
-        required EmployeeShift employeeShift,
+      {required String employeeId,
+      required EmployeeShift employeeShift,
       required BuildContext context}) async {
     try {
-
-      Response res = await Dio().post("http://100.24.5.134:8000/addShift/$employeeId",
+      Response res = await Dio().post(
+          "http://100.24.5.134:8000/addShift/$employeeId/",
           data: employeeShift.toJson());
 
       if (res.statusCode == 200) {

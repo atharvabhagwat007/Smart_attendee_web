@@ -87,7 +87,6 @@ class _AddShiftState extends State<AddShift> {
           TextButton(
             onPressed: () {
               if (_formKey.currentState?.validate() ?? false) {
-                Navigator.of(context).pop();
                 final newShift = EmployeeShift(
                     date: DateFormat('dd/MM/yyyy').format(shiftDate),
                     shiftFrom: shiftFrom,

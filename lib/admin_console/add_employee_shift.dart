@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_attendee/admin_console/providers/get_all_clients.dart';
 import 'package:smart_attendee/routing/routes.dart';
 
 import 'providers/get_all_employees.dart';
@@ -16,6 +17,7 @@ class _AddEmployeeShiftState extends State<AddEmployeeShift> {
   @override
   void initState() {
     context.read<GetAllEmployeeProvider>().getAllEmployees();
+    context.read<GetAllClientProvider>().getAllClients();
     super.initState();
   }
 
@@ -25,11 +27,13 @@ class _AddEmployeeShiftState extends State<AddEmployeeShift> {
         body: Center(
       child: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: (Provider.of<GetAllEmployeeProvider>(context).isEmployeeLoaded)
-            ? getEmployeeList()
-            : const Center(
-                child: CircularProgressIndicator(),
-              ),
+        child:
+            (Provider.of<GetAllEmployeeProvider>(context).isEmployeeLoaded) &&
+                    (Provider.of<GetAllClientProvider>(context).isClientLoaded)
+                ? getEmployeeList()
+                : const Center(
+                    child: CircularProgressIndicator(),
+                  ),
       ),
     ));
   }
@@ -38,6 +42,7 @@ class _AddEmployeeShiftState extends State<AddEmployeeShift> {
     return LayoutBuilder(builder: (context, constraints) {
       final employeeList =
           Provider.of<GetAllEmployeeProvider>(context).employeeList;
+      final clientList = Provider.of<GetAllClientProvider>(context).clientList;
       return SizedBox(
         height: constraints.maxHeight,
         child: Column(
@@ -98,7 +103,8 @@ class _AddEmployeeShiftState extends State<AddEmployeeShift> {
                       trailing: InkWell(
                           onTap: () {
                             context.goNamed(RouterPaths.editEmployee,
-                                params: {'empId': e.empId, 'tab': 'add_shift'}, extra: e);
+                                params: {'empId': e.empId, 'tab': 'add_shift'},
+                                extra: e);
                           },
                           child: const Text(
                             "Edit",

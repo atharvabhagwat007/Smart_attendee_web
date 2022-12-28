@@ -42,7 +42,6 @@ class EmployeeModel {
 
   factory EmployeeModel.fromJson(Map<String, dynamic> json) => EmployeeModel(
       attendance: List<Attendance>.from(json["attendance"].map((x) {
-        print(x);
         return Attendance.fromJson(Map<String, dynamic>.from(x));
       })),
       clientId: json["client_id"] as String?,

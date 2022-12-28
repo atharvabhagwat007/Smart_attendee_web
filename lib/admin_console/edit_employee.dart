@@ -200,17 +200,12 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Text(
+      children: const [
+        Text(
           "Edit Employee",
           style: TextStyle(
               color: Colors.black87, fontWeight: FontWeight.w700, fontSize: 30),
-        ),
-        IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.close))
+        )
       ],
     );
   }
