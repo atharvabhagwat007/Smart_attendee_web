@@ -16,7 +16,7 @@ class _AdminConsoleState extends State<AdminConsole> {
   void initState() {
     context.read<GetAllEmployeeProvider>().getAllEmployees();
     context.read<GetAllClientProvider>().getAllClients();
-    context.read<GetAllClientProvider>().getAllClients();
+
     super.initState();
   }
 
