@@ -32,16 +32,7 @@ class _AdminConsoleState extends State<AdminConsole> {
                   children: [
                     if (Provider.of<GetAllEmployeeProvider>(context)
                         .isEmployeeLoaded)
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 40.0),
-                        child: Text(
-                          "Good Morning ",
-                          style: TextStyle(
-                            fontSize: 38,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
+                      _getGreetingText(),
                     Row(
                       children: [
                         _getCountsContainer("Total Employees ",
@@ -99,6 +90,19 @@ class _AdminConsoleState extends State<AdminConsole> {
                 ),
               )
             : reloadView());
+  }
+
+  Widget _getGreetingText() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 40.0),
+      child: Text(
+        "Good Morning ",
+        style: TextStyle(
+          fontSize: 38,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
   }
 
   Widget employeeListView(BuildContext context) {
