@@ -2,22 +2,22 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_attendee/models/employee_model.dart';
 
-class AddEmployeeShiftProvider with ChangeNotifier {
+class EditEmployeeProvider with ChangeNotifier {
   Future<bool> addEmployeeShift(
       {required String employeeId,
-      required EmployeeShift employeeShift,
+      required Map<String, dynamic> json,
       required BuildContext context}) async {
     try {
       Response res = await Dio().post(
-          "http://100.24.5.134:8000/addShift/$employeeId/",
-          data: employeeShift.toJson());
+          "http://100.24.5.134:8000/editEmp/$employeeId/",
+          data: json);
 
       if (res.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: SizedBox(
               height: 20,
-              child: Center(child: Text("Employee shift added successfully")),
+              child: Center(child: Text("Employee updated successfully")),
             ),
           ),
         );

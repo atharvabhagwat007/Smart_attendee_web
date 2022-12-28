@@ -7,6 +7,7 @@ import 'package:smart_attendee/admin_console/providers/get_all_clients.dart';
 import 'package:smart_attendee/admin_console/providers/get_all_employees.dart';
 import 'package:smart_attendee/auth/provider/auth_provider.dart';
 
+import 'admin_console/providers/get_employee_provider.dart';
 import 'firebase_options.dart';
 import 'routing/auth_gaurd.dart';
 import 'routing/router.dart';
@@ -40,6 +41,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<GetAllEmployeeProvider>(
           create: (BuildContext createContext) => GetAllEmployeeProvider(),
+        ),
+        ChangeNotifierProvider<GetEmployeeProvider>(
+          create: (BuildContext createContext) => GetEmployeeProvider(),
         ),
         ChangeNotifierProvider<GetAllClientProvider>(
           create: (BuildContext createContext) => GetAllClientProvider(),
