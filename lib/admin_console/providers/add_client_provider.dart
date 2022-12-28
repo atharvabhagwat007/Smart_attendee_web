@@ -4,6 +4,7 @@ import 'package:smart_attendee/models/employee_model.dart';
 
 class AddClientProvider with ChangeNotifier {
   List<String> selectedEmployee = [];
+  bool isClientAdded = false;
 
   void selectEmployee(EmployeeModel currentEmployee) {
     if (currentEmployee.isSelected) {
@@ -41,6 +42,8 @@ class AddClientProvider with ChangeNotifier {
             content: Text(res.data["status"].toString()),
           ),
         );
+        isClientAdded = true;
+        notifyListeners();
         return "true";
       }
     } on DioError catch (e) {
@@ -49,6 +52,8 @@ class AddClientProvider with ChangeNotifier {
           content: Text(e.response!.data["status"].toString()),
         ),
       );
+      isClientAdded = true;
+      notifyListeners();
       return "false";
     }
     return "";

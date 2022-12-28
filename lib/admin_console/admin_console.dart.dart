@@ -77,6 +77,7 @@ class _AdminConsoleState extends State<AdminConsole> {
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
                 child: SizedBox(
                   child: ListView(
+                    reverse: true,
                     shrinkWrap: true,
                     children: [
                       const Divider(
@@ -151,6 +152,7 @@ class _AdminConsoleState extends State<AdminConsole> {
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
                 child: SizedBox(
                   child: ListView(
+                    reverse: true,
                     shrinkWrap: true,
                     children: [
                       const Divider(

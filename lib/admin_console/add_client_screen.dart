@@ -54,14 +54,21 @@ class _AddClientScreenState extends State<AddClientScreen> {
                 const SizedBox(
                   height: 30,
                 ),
-                InkWell(
-                  onTap: () async {
-                    _validatingAndAddingClient();
-                  },
-                  child: SubmitButton(
-                    title: "Submit",
-                  ),
-                ),
+                Provider.of<AddClientProvider>(
+                  context,
+                  listen: true,
+                ).isClientAdded
+                    ? InkWell(
+                        onTap: () async {
+                          _validatingAndAddingClient();
+                        },
+                        child: SubmitButton(
+                          title: "Submit",
+                        ),
+                      )
+                    : const Center(
+                        child: CircularProgressIndicator(),
+                      ),
               ],
             ),
           ),
