@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_attendee/admin_console/providers/add_client_provider.dart';
@@ -178,17 +177,12 @@ class _AddClientScreenState extends State<AddClientScreen> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Text(
+      children: const [
+        Text(
           "Add Client",
           style: TextStyle(
               color: Colors.black87, fontWeight: FontWeight.w700, fontSize: 30),
         ),
-        IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.close))
       ],
     );
   }

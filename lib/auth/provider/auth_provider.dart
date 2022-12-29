@@ -23,6 +23,16 @@ class AuthProvider with ChangeNotifier {
     return false;
   }
 
+  Future<String> getUserId() async {
+    var currentUser = _firebaseAuth.currentUser;
+    if (currentUser == null) {
+      currentUser = await _firebaseAuth.authStateChanges().first;
+      return currentUser!.uid;
+    } else {
+      return currentUser.uid;
+    }
+  }
+
   Future<AuthResponse> legacyAuth(
       {required String email,
       required String password,
