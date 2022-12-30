@@ -76,7 +76,7 @@ class _AddClientScreenState extends State<AddClientScreen> {
     );
   }
 
-  _validatingAndAddingClient() {
+  _validatingAndAddingClient() async {
     if (_clientIdController.text.isEmpty ||
         _clientLocationController.text.isEmpty ||
         _clientNameController.text.isEmpty ||
@@ -95,6 +95,11 @@ class _AddClientScreenState extends State<AddClientScreen> {
         ),
       );
     } else {
+      final currentPosition =
+          await Provider.of<AddClientProvider>(context, listen: false)
+              .determinePosition();
+      print(currentPosition.toString());
+      if (!mounted) return;
       Provider.of<AddClientProvider>(context, listen: false)
           .addClient(
               context: context,
