@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_attendee/admin_console/add_client_screen.dart';
 import 'package:smart_attendee/admin_console/add_employee_shift.dart';
 import 'package:smart_attendee/admin_console/admin_console.dart.dart';
 import 'package:smart_attendee/desktop_nav/models/nav_option.dart';
+import 'package:smart_attendee/routing/auth_gaurd.dart';
 import 'package:smart_attendee/routing/routes.dart';
 
 import '../admin_console/add_employee_screen.dart';
+import '../auth/provider/auth_provider.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({
@@ -83,78 +86,132 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     }
   }
 
+  Future<void> logOut() async {
+    final status = await context.read<AuthProvider>().signOutUser();
+    if (status) {
+      if (!mounted) return;
+      Provider.of<AuthGaurd>(context, listen: false).loggedIn = false;
+    } else {
+      snackbarMessage('Couldn\'t logout. Please try again');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _selectedIndex = _indexFrom(widget.tab);
     _selectTab(_selectedIndex);
-    return Scaffold(
-      body: Row(
-        children: [
-          LayoutBuilder(
-            builder: (context, constraints) {
-              return Container(
-                color: Theme.of(context).navigationRailTheme.backgroundColor,
-                child: SingleChildScrollView(
-                  clipBehavior: Clip.antiAlias,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: constraints.maxHeight,
-                    ),
-                    child: IntrinsicHeight(
-                      child: NavigationRail(
-                        leading: Padding(
-                          padding: const EdgeInsets.only(left: 24, top: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: const [
-                              Icon(
-                                Icons.dashboard_rounded,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 12,
-                              ),
-                              Text(
-                                'Admin DashBoard',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w700),
-                              )
-                            ],
-                          ),
-                        ),
-                        destinations: [
-                          for (var destination in _navigationDestinations)
-                            NavigationRailDestination(
-                              icon: Material(
-                                key: ValueKey(
-                                  'log-${destination.textLabel}',
+    return ChangeNotifierProvider(
+      create: (context) => AuthProvider(),
+      builder: (context, child) => Scaffold(
+        body: Row(
+          children: [
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return Container(
+                  color: Theme.of(context).navigationRailTheme.backgroundColor,
+                  child: SingleChildScrollView(
+                    clipBehavior: Clip.antiAlias,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
+                      ),
+                      child: IntrinsicHeight(
+                        child: NavigationRail(
+                          leading: Padding(
+                            padding: const EdgeInsets.only(left: 24, top: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: const [
+                                Icon(
+                                  Icons.dashboard_rounded,
+                                  color: Colors.white,
                                 ),
-                                color: Colors.transparent,
-                                child: Icon(destination.menuIcon),
-                              ),
-                              label: Text(destination.textLabel),
+                                SizedBox(
+                                  width: 12,
+                                ),
+                                Text(
+                                  'Admin DashBoard',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w700),
+                                )
+                              ],
                             ),
-                        ],
-                        extended: true,
-                        labelType: NavigationRailLabelType.none,
-                        selectedIndex: 0,
-                        onDestinationSelected: _onDestinationSelected,
+                          ),
+                          trailing: logOutButton(onTap: logOut),
+                          destinations: [
+                            for (var destination in _navigationDestinations)
+                              NavigationRailDestination(
+                                icon: Material(
+                                  key: ValueKey(
+                                    'log-${destination.textLabel}',
+                                  ),
+                                  color: Colors.transparent,
+                                  child: Icon(destination.menuIcon),
+                                ),
+                                label: Text(destination.textLabel),
+                              ),
+                          ],
+                          extended: true,
+                          labelType: NavigationRailLabelType.none,
+                          selectedIndex: _selectedIndex,
+                          onDestinationSelected: _onDestinationSelected,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              );
-            },
-          ),
-          const VerticalDivider(thickness: 1, width: 1),
-          Expanded(
-            child: Center(
-              child: _tabBody,
+                );
+              },
             ),
+            const VerticalDivider(thickness: 1, width: 1),
+            Expanded(
+              child: Center(
+                child: _tabBody,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  TextButton logOutButton({required VoidCallback onTap}) {
+    return TextButton(
+      onPressed: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 24.0),
+        child: SizedBox(
+          width: 256,
+          child: Row(
+            children: const [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 22.0),
+                child: Icon(
+                  Icons.power_settings_new_rounded,
+                  color: Colors.red,
+                ),
+              ),
+              Text(
+                'Sign Out',
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              )
+            ],
           ),
-        ],
+        ),
+      ),
+    );
+  }
+
+  void snackbarMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: SizedBox(
+          height: 20,
+          child: Text(message),
+        ),
       ),
     );
   }

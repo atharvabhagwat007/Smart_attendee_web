@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_attendee/admin_console/providers/add_client_provider.dart';
@@ -77,7 +76,7 @@ class _AddClientScreenState extends State<AddClientScreen> {
     );
   }
 
-  _validatingAndAddingClient() {
+  _validatingAndAddingClient() async {
     if (_clientIdController.text.isEmpty ||
         _clientLocationController.text.isEmpty ||
         _clientNameController.text.isEmpty ||
@@ -96,6 +95,11 @@ class _AddClientScreenState extends State<AddClientScreen> {
         ),
       );
     } else {
+      final currentPosition =
+          await Provider.of<AddClientProvider>(context, listen: false)
+              .determinePosition();
+      print(currentPosition.toString());
+      if (!mounted) return;
       Provider.of<AddClientProvider>(context, listen: false)
           .addClient(
               context: context,
@@ -178,17 +182,12 @@ class _AddClientScreenState extends State<AddClientScreen> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Text(
+      children: const [
+        Text(
           "Add Client",
           style: TextStyle(
               color: Colors.black87, fontWeight: FontWeight.w700, fontSize: 30),
         ),
-        IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.close))
       ],
     );
   }

@@ -26,71 +26,102 @@ class _LoginViewState extends State<LoginView> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  Future<void> legacyAuth() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      final authState = await context.read<AuthProvider>().legacyAuth(
+          email: _emailController.text,
+          password: _passwordController.text,
+          persistAuth: false);
+      if (authState.success) {
+        if (!mounted) return;
+        Provider.of<AuthGaurd>(context, listen: false).loggedIn = true;
+        context.goNamed(RouterPaths.dashboard, params: {'tab': 'overview'});
+      } else {
+        snackbarMessage(authState.message ?? ERROR_TEXT);
+      }
+    } else {
+      snackbarMessage('Please enter mail and password');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Center(
-          child: Container(
-            width: 1158.w,
-            height: 588.h,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.white,
-            ),
-            child: Center(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    //Error Text 1
-                    Padding(
-                      padding: const EdgeInsets.only(top: 40),
-                      child: Text(
-                          _isErrorText ? _errorText : 'Login to get started',
-                          textAlign: TextAlign.left,
-                          style: _isErrorText
-                              ? customTextStyle(Colors.red)
-                              : customTextStyle(
-                                  const Color.fromRGBO(66, 133, 244, 1))),
+    return ChangeNotifierProvider(
+        create: (context) => AuthProvider(),
+        builder: (context, child) => Scaffold(
+              body: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Center(
+                  child: Container(
+                    width: 1158.w,
+                    height: 588.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
                     ),
-                    //Email TextField
-                    _getEmailTextField(),
-                    //Password Text field
-                    _getPasswordTextField(),
-                    // sign in button
-                    _getSignInButton(),
+                    child: Center(
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            //Error Text 1
+                            Padding(
+                              padding: const EdgeInsets.only(top: 40),
+                              child: Text(
+                                  _isErrorText
+                                      ? _errorText
+                                      : 'Login to get started',
+                                  textAlign: TextAlign.left,
+                                  style: _isErrorText
+                                      ? customTextStyle(Colors.red)
+                                      : customTextStyle(const Color.fromRGBO(
+                                          66, 133, 244, 1))),
+                            ),
+                            //Email TextField
+                            _getEmailTextField(),
+                            //Password Text field
+                            _getPasswordTextField(),
+                            // sign in button
+                            _getSignInButton(),
 
-                    // Forgot Password button
-                    _getForgotPasswordButton(),
-                  ],
+                            // Forgot Password button
+                            _getForgotPasswordButton(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-        ),
-      ),
-    );
+            ));
   }
 
   Widget _getForgotPasswordButton() {
     return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: InkWell(
-        onTap: () {},
-        child: Text(
-          'Forgot password?',
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            color: const Color.fromRGBO(0, 0, 0, 1),
-            fontSize: 16.sp,
-            letterSpacing: 0,
-            fontWeight: FontWeight.bold,
-            height: 1,
-          ),
+        padding: const EdgeInsets.only(top: 20),
+        child: InkWell(
+            onTap: () {},
+            child: Text(
+              'Forgot password?',
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                color: const Color.fromRGBO(0, 0, 0, 1),
+                fontSize: 16.sp,
+                letterSpacing: 0,
+                fontWeight: FontWeight.bold,
+                height: 1,
+              ),
+            )));
+  }
+
+  void snackbarMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: SizedBox(
+          height: 20,
+          child: Text(message),
         ),
       ),
     );
