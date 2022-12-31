@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_attendee/admin_console/admin_console.dart.dart';
 import 'package:smart_attendee/admin_console/providers/add_employee_provider.dart';
-import 'package:smart_attendee/admin_console/providers/get_all_employees.dart';
 import 'package:smart_attendee/admin_console/widgets/custom_text_field.dart';
 import 'package:smart_attendee/admin_console/widgets/submit_button.dart';
 import 'package:smart_attendee/routing/routes.dart';
@@ -30,6 +28,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
   final TextEditingController _empIdController = TextEditingController();
   String dropdownValue = "Morning";
   String photoUploadUrl = "";
+  final FirebaseStorage _storage = FirebaseStorage.instance;
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -198,18 +197,20 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
       children: [
         Expanded(
           child: CustomTextField(
-              title: "First Name*",
-              labelText: "First Name",
-              textEditingController: _firstNameController),
+            title: "First Name*",
+            labelText: "First Name",
+            textEditingController: _firstNameController,
+          ),
         ),
         const SizedBox(
           width: 30,
         ),
         Expanded(
           child: CustomTextField(
-              title: "Last Name*",
-              labelText: "Last Name",
-              textEditingController: _lastNameController),
+            title: "Last Name*",
+            labelText: "Last Name",
+            textEditingController: _lastNameController,
+          ),
         ),
       ],
     );
@@ -220,18 +221,20 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
       children: [
         Expanded(
           child: CustomTextField(
-              title: "Employee Email*",
-              labelText: "Emp email",
-              textEditingController: _empEmailController),
+            title: "Employee Email*",
+            labelText: "Emp email",
+            textEditingController: _empEmailController,
+          ),
         ),
         const SizedBox(
           width: 30,
         ),
         Expanded(
           child: CustomTextField(
-              title: "Enter a password for employee*",
-              labelText: "Password",
-              textEditingController: _empPasswordController),
+            title: "Enter a password for employee*",
+            labelText: "Password",
+            textEditingController: _empPasswordController,
+          ),
         ),
       ],
     );
@@ -245,7 +248,10 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
         Text(
           "Add Employee",
           style: TextStyle(
-              color: Colors.black87, fontWeight: FontWeight.w700, fontSize: 30),
+            color: Colors.black87,
+            fontWeight: FontWeight.w700,
+            fontSize: 30,
+          ),
         ),
       ],
     );
@@ -253,7 +259,9 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
 
   _pickImage() async {
     final ImagePicker _picker = ImagePicker();
-    XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    XFile? image = await _picker.pickImage(
+      source: ImageSource.gallery,
+    );
     if (image != null) {
       var f = await image.readAsBytes();
       setState(() {

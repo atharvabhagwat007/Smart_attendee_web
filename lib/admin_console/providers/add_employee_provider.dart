@@ -5,10 +5,14 @@ import 'package:flutter/material.dart';
 
 class AddEmployeeProvider with ChangeNotifier {
   String photoUrl = '';
-  void uploadPhoto(Uint8List webImage) async {
+  Future uploadPhoto(
+    Uint8List webImage,
+    String empId,
+    BuildContext context,
+  ) async {
     var firebaseStorage = FirebaseStorage.instance;
     // ignore: omit_local_variable_types
-    Reference reference = firebaseStorage.ref().child('images');
+    Reference reference = firebaseStorage.ref("employees/$empId/profile");
 
     await reference
         .putData(
@@ -18,19 +22,26 @@ class AddEmployeeProvider with ChangeNotifier {
         .whenComplete(() async {
       await reference.getDownloadURL().then((value) {
         photoUrl = value;
+      }).onError((error, stackTrace) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Failed to upload image"),
+          ),
+        );
       });
     });
   }
 
-  Future<String> addEmoplyee(
-      {required String empPhotoUrl,
-      required String empName,
-      required String empId,
-      required String empMail,
-      required String empPassword,
-      required BuildContext context,
-      required Uint8List webImage,
-      required String empShift}) async {
+  Future<String> addEmoplyee({
+    required String empPhotoUrl,
+    required String empName,
+    required String empId,
+    required String empMail,
+    required String empPassword,
+    required BuildContext context,
+    required Uint8List webImage,
+    required String empShift,
+  }) async {
     if (empPhotoUrl.isEmpty ||
         empName.isEmpty ||
         empShift.isEmpty ||
@@ -40,7 +51,7 @@ class AddEmployeeProvider with ChangeNotifier {
       return "Please enter all fields";
     } else {
       try {
-        // uploadPhoto(webImage);
+        await uploadPhoto(webImage, empId, context);
 
         Response res =
             await Dio().post("http://100.24.5.134:8000/addEmp", data: {
@@ -48,7 +59,7 @@ class AddEmployeeProvider with ChangeNotifier {
           "emp_mail": empMail,
           "emp_pwd": empPassword,
           "admin_id": "tTG47D04arQ3tdlq8MY5",
-          "emp_photourl": empPhotoUrl,
+          "emp_photourl": photoUrl,
           "attendance": [],
           "overtime": [],
           "emp_name": empName,
@@ -56,7 +67,7 @@ class AddEmployeeProvider with ChangeNotifier {
           "client_id": "12345678",
           "client_name": "smartAttendance",
           "client_location": "INDIA",
-          "client_sublocation": "PUNE"
+          "client_sublocation": "PUNE",
         });
 
         if (res.statusCode == 200) {

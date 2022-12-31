@@ -23,11 +23,12 @@ class AuthProvider with ChangeNotifier {
     return false;
   }
 
-  Future<AuthResponse> legacyAuth(
-      {required String email,
-      required String password,
-      required bool persistAuth,
-      String? userName}) async {
+  Future<AuthResponse> legacyAuth({
+    required String email,
+    required String password,
+    required bool persistAuth,
+    String? userName,
+  }) async {
     if (!persistAuth) {
       await _firebaseAuth.setPersistence(Persistence.NONE);
     }

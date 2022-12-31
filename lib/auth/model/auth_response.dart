@@ -5,7 +5,11 @@ class AuthResponse {
   final String? message;
   final UserCredential? credential;
 
-  AuthResponse({required this.success, this.message, this.credential});
+  AuthResponse({
+    required this.success,
+    this.message,
+    this.credential,
+  });
 
   @override
   String toString() {

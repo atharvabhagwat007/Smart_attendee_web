@@ -35,6 +35,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<AddClientProvider>(
           create: (context) => AddClientProvider(),
         ),
+        ChangeNotifierProvider<AuthProvider>(
+          create: (context) => AuthProvider(),
+        ),
         ChangeNotifierProvider<AuthGaurd>(
           lazy: false,
           create: (BuildContext createContext) => logInState,
