@@ -189,52 +189,66 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
                   child: SubmitButton(title: "Add Shift")),
               const Spacer(),
               TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     final employeeName = employeeNameController.text;
                     final employeeMail = employeeEmailController.text;
                     final employeePassword = employeePasswordController.text;
                     if (employeeName.isNotEmpty &&
                         employeeMail.isNotEmpty &&
                         employeePassword.isNotEmpty) {
-                      context
+                      await context
                           .read<EditEmployeeProvider>()
-                          .editEmployee(
-                            employeeId: widget.employeeId,
-                            json: {
-                              "emp_name": employeeNameController.text,
-                              "emp_mail": employeeEmailController.text,
-                              "emp_pwd": employeePasswordController.text,
-                            },
-                            context: context,
+                          .uploadPhoto(
+                            webImage,
+                            widget.employeeId,
+                            context,
                           )
-                          .then((value) {
-                        if (value) {
+                          .whenComplete(() {
+                        context
+                            .read<EditEmployeeProvider>()
+                            .editEmployee(
+                              webImage: webImage,
+                              employeeId: widget.employeeId,
+                              json: {
+                                "emp_name": employeeNameController.text,
+                                "emp_mail": employeeEmailController.text,
+                                "emp_pwd": employeePasswordController.text,
+                                "emp_photourl":
+                                    Provider.of<EditEmployeeProvider>(context,
+                                            listen: false)
+                                        .photoUrl,
+                              },
+                              context: context,
+                            )
+                            .then((value) {
                           if (value) {
-                            setState(() {
-                              context
-                                  .read<GetEmployeeProvider>()
-                                  .getEmployee(employeeId: widget.employeeId);
-                            });
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: SizedBox(
-                                  height: 20,
-                                  child: Text('Succesfully Update the User'),
+                            if (value) {
+                              setState(() {
+                                context
+                                    .read<GetEmployeeProvider>()
+                                    .getEmployee(employeeId: widget.employeeId);
+                              });
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: SizedBox(
+                                    height: 20,
+                                    child: Text('Succesfully Update the User'),
+                                  ),
                                 ),
-                              ),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: SizedBox(
-                                  height: 20,
-                                  child: Text(
-                                      'Some Error occured. Please try again'),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: SizedBox(
+                                    height: 20,
+                                    child: Text(
+                                        'Some Error occured. Please try again'),
+                                  ),
                                 ),
-                              ),
-                            );
+                              );
+                            }
                           }
-                        }
+                        });
                       });
                     }
                   },
@@ -288,9 +302,11 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
             IconButton(
               onPressed: () {
                 employeeShift.removeAt(index);
+
                 context
                     .read<EditEmployeeProvider>()
                     .editEmployee(
+                      webImage: webImage,
                       employeeId: widget.employeeId,
                       json: {
                         "attendance": List<dynamic>.from(
