@@ -55,6 +55,8 @@ class AddClientProvider with ChangeNotifier {
   Future<String> addClient({
     required String clientId,
     required String adminId,
+    required int latitude,
+    required int longitude,
     required List employeeList,
     required String clientName,
     required String clientCountry,
@@ -72,6 +74,7 @@ class AddClientProvider with ChangeNotifier {
         "client_name": clientName,
         "client_location": clientCountry,
         "client_sublocation": clientCity,
+        "location": {"latitude": latitude, "longitude": longitude, "radius": 50}
       });
       if (res.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(

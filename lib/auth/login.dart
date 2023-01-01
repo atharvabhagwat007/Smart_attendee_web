@@ -138,7 +138,7 @@ class _LoginViewState extends State<LoginView> {
         ),
         onPressed: () async {
           // sign in with email and password
-          _signInUser();
+          legacyAuth();
         },
         child: Text(
           'Login',
@@ -234,28 +234,6 @@ class _LoginViewState extends State<LoginView> {
           ),
         ),
       ),
-    );
-  }
-
-  void _signInUser() {
-    Provider.of<AuthGaurd>(context, listen: false).loggedIn = true;
-    Provider.of<AuthProvider>(context)
-        .signIn(
-      email: _emailController.text,
-      password: _passwordController.text,
-    )
-        .then(
-      (v) {
-        if (v.success) {
-          context.goNamed(RouterPaths.dashboard, params: {'tab': 'overview'});
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to login'),
-            ),
-          );
-        }
-      },
     );
   }
 

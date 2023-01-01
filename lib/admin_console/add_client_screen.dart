@@ -95,29 +95,33 @@ class _AddClientScreenState extends State<AddClientScreen> {
         ),
       );
     } else {
-      final currentPosition =
-          await Provider.of<AddClientProvider>(context, listen: false)
-              .determinePosition();
-      print(currentPosition.toString());
-      if (!mounted) return;
-      Provider.of<AddClientProvider>(context, listen: false)
-          .addClient(
-              context: context,
-              adminId: "tTG47D04arQ3tdlq8MY5", //TODO KEPT IT HARDCODED
-              clientCity: _clientSubLocationController.text,
-              clientCountry: _clientLocationController.text,
-              clientId: _clientIdController.text,
-              clientName: _clientNameController.text,
-              employeeList:
-                  Provider.of<AddClientProvider>(context, listen: false)
-                      .selectedEmployee)
-          .then((value) {
-        if (value == "true") {
-          // Navigator.pop(context);
-          _clearingData();
-          print("added");
-        }
-      });
+      try {
+        final currentPosition =
+            await Provider.of<AddClientProvider>(context, listen: false)
+                .determinePosition();
+
+        if (!mounted) return;
+        Provider.of<AddClientProvider>(context, listen: false)
+            .addClient(
+                context: context,
+                adminId: "tTG47D04arQ3tdlq8MY5", //TODO KEPT IT HARDCODED
+                clientCity: _clientSubLocationController.text,
+                clientCountry: _clientLocationController.text,
+                clientId: _clientIdController.text,
+                clientName: _clientNameController.text,
+                latitude: currentPosition.latitude.toInt(),
+                longitude: currentPosition.longitude.toInt(),
+                employeeList:
+                    Provider.of<AddClientProvider>(context, listen: false)
+                        .selectedEmployee)
+            .then((value) {
+          if (value == "true") {
+            // Navigator.pop(context);
+            _clearingData();
+            print("added");
+          }
+        });
+      } catch (_) {}
     }
   }
 

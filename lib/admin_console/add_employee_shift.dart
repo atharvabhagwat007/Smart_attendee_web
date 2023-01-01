@@ -155,17 +155,26 @@ class _AddEmployeeShiftState extends State<AddEmployeeShift> {
     return Row(
       children: [
         const Spacer(),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-          ),
+        Padding(
           padding: const EdgeInsets.all(8.0),
           child: DropDown(
               hint: 'Select Client',
               dropdownItems: clientNames,
               onChanged: onChanged,
               value: selectedClient),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: IconButton(
+              onPressed: () {
+                setState(() {
+                  this.selectedClient = null;
+                });
+              },
+              icon: const Icon(
+                Icons.clear_rounded,
+                color: Colors.red,
+              )),
         )
       ],
     );
